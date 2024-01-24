@@ -6,13 +6,13 @@
 </head>
 <body>
 <h2>로그인 화면 </h2>
-<form class="form-signin" method="post" action="/login/login-proc">
+<form class="form-signup" method="post" action="/login/login-proc">
 
     <input type="text" id="username" name="username" class="form-control" placeholder="아이디" autofocus=""/>
     <input type="text" id="password" name="password" class="form-control" placeholder="비밀번호"/>
 
-    <input id="joinBtn" type="submit" class="btn btn-secondary active" value="로그인"/>
-    <a href="/join" class="btn btn-info active" role="button">회원가입</a>
+    <input id="submit" style="display :inline-block;" type="submit" value="로그인"/>
+    <a href="/auth/join" class="btn btn-info active" role="button">회원가입</a>
 
 </form>
 </body>

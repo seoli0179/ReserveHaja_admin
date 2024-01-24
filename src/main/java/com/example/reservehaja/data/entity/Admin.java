@@ -19,7 +19,6 @@ public class Admin {
     @Column(nullable = false)
     private String adminPassword;
 
-    /*
     @Column(nullable = false)
     private String adminName;
 
@@ -31,7 +30,5 @@ public class Admin {
 
     @Column(nullable = false)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
     private String adminEmail;
-     */
-
 
 }

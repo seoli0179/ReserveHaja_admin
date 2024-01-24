@@ -41,7 +41,10 @@ public class SecurityConfig {
                 .headers((headerConfig) -> headerConfig.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/", "/join", "/login").permitAll()
+                                .requestMatchers("/", "/js/**").permitAll()
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
+                                .requestMatchers("/product/**").permitAll()
                                 .anyRequest().authenticated()
 
                 )
