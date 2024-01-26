@@ -32,6 +32,9 @@ public class ReserveResponseDto {
 
     public ReserveResponseDto fromEntity(Amenity amenity) {
 
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+        DateTimeFormatter pattern2 = DateTimeFormatter.ofPattern("HH:mm");
+
         id = amenity.getId();
         svcId = amenity.getSvcId();
         svcStateName = amenity.getSvcStateName(); // 서비스 상태
@@ -40,12 +43,12 @@ public class ReserveResponseDto {
         placeName = amenity.getPlaceName();  // 장소명
         areaName = amenity.getAreaName();  // 지역명
         userTargetInfo = amenity.getUserTargetInfo();  // 서비스 대상
-        rcptBeginDate = amenity.getRcptBeginDate().toString();  // 접수시작일시
-        rcptEndDate = amenity.getRcptEndDate().toString();  // 접수종료일시
-        svcOpenBeginDate = amenity.getSvcOpenBeginDate().toString();  // 서비스개시 시작일시
-        svcOpenEndDate = amenity.getSvcOpenEndDate().toString();  // 서비스개시 종료일
-        svcUseBeginTime = amenity.getSvcUseBeginTime().toString();  // 서비스이용 시작시간
-        svcUseEndTime = amenity.getSvcUseEndTime().toString();
+        rcptBeginDate = amenity.getRcptBeginDate().format(pattern);  // 접수시작일시
+        rcptEndDate = amenity.getRcptEndDate().format(pattern);  // 접수종료일시
+        svcOpenBeginDate = amenity.getSvcOpenBeginDate().format(pattern);  // 서비스개시 시작일시
+        svcOpenEndDate = amenity.getSvcOpenEndDate().format(pattern);  // 서비스개시 종료일
+        svcUseBeginTime = amenity.getSvcUseBeginTime().format(pattern2);  // 서비스이용 시작시간
+        svcUseEndTime = amenity.getSvcUseEndTime().format(pattern2);
         placeX = amenity.getPlaceX();  // 장소X좌표
         placeY = amenity.getPlaceY();  // 장소Y좌표
         detailInfo = amenity.getDetailInfo();  // 상세정보

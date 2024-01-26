@@ -43,4 +43,10 @@ public class PageController {
         return "/reserve/reserveSelectPage";
     }
 
+    @GetMapping("/reserve/update")
+    public String reserveUpdatePage() {return "/reserve/reserveUpdatePage";}
+
+    @GetMapping("/reserve/delete")
+    public String reserveDeletePage() {return "/reserve/reserveDeletePage";}
+
 }

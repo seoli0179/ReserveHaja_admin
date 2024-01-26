@@ -3,12 +3,14 @@ package com.example.reservehaja.service.amenity;
 import com.example.reservehaja.data.dao.amenity.AmenityDAO;
 import com.example.reservehaja.data.dto.reserve.ReserveRequestDto;
 import com.example.reservehaja.data.dto.reserve.ReserveResponseDto;
+import com.example.reservehaja.data.dto.reserve.ReserveUpdateRequestDto;
 import com.example.reservehaja.data.dto.reserveInfoJson.ReserveJsonArrayRequestDto;
 import com.example.reservehaja.data.entity.Amenity;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.Parameter;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RequiredArgsConstructor
 @Service
@@ -55,4 +57,11 @@ public class AmenityService {
 
     }
 
+    public boolean updateAmenity(@RequestBody ReserveUpdateRequestDto dto) {
+        return amenityDAO.updateAmenity(dto);
+    }
+
+    public boolean deleteAmenity(Long id) {
+        return amenityDAO.deleteAmenity(id);
+    }
 }

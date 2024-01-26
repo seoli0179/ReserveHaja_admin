@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reservation Form</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<label for="reservationId">Reservation ID:</label>
+<input type="text" id="reservationId">
+<button id="loadData">Load Reservation Data</button>
+
+
+<form id="reservationForm">
+    <label for="svcStateName">Service State Name:</label>
+    <input type="text" id="svcStateName" placeholder="Active/Inactive"><br>
+
+    <label for="imageUrl">Image URL:</label>
+    <input type="text" id="imageUrl" placeholder="http://example.com/image.jpg"><br>
+
+    <label for="svcName">Service Name:</label>
+    <input type="text" id="svcName" placeholder="서비스 이름"><br>
+
+    <label for="placeName">Place Name:</label>
+    <input type="text" id="placeName" placeholder="강남구박물관"><br>
+
+    <label for="areaName">Area Name:</label>
+    <input type="text" id="areaName" placeholder="강남구"><br>
+
+    <label for="userTargetInfo">User Target Info:</label>
+    <input type="text" id="userTargetInfo" placeholder="제한없음"><br>
+
+    <label for="rcptBeginDate">Receipt Begin Date:</label>
+    <input type="text" id="rcptBeginDate" placeholder="2024-01-01 08:00:00.0"><br>
+
+    <label for="rcptEndDate">Receipt End Date:</label>
+    <input type="text" id="rcptEndDate" placeholder="2024-01-01 08:00:00.0"><br>
+
+    <label for="svcOpenBeginDate">Service Open Begin Date:</label>
+    <input type="text" id="svcOpenBeginDate" placeholder="2024-01-01 08:00:00.0"><br>
+
+    <label for="svcOpenEndDate">Service Open End Date:</label>
+    <input type="text" id="svcOpenEndDate" placeholder="2024-01-01 08:00:00.0"><br>
+
+    <label for="svcUseBeginTime">Service Use Begin Time:</label>
+    <input type="text" id="svcUseBeginTime" placeholder="09:00"><br>
+
+    <label for="svcUseEndTime">Service Use End Time:</label>
+    <input type="text" id="svcUseEndTime" placeholder="17:00"><br>
+
+    <label for="placeX">Place X Coordinate:</label>
+    <input type="text" id="placeX" placeholder="123.456"><br>
+
+    <label for="placeY">Place Y Coordinate:</label>
+    <input type="text" id="placeY" placeholder="987.654"><br>
+
+    <label for="detailInfo">Detail Info:</label>
+    <textarea id="detailInfo" placeholder="상세내용 작성"></textarea><br>
+
+    <label for="revokeStandDayName">Revoke Stand Day Name:</label>
+    <input type="text" id="revokeStandDayName" placeholder="7일전"><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    $(document).ready(function(){
+
+        $('#loadData').click(function() {
+            var reservationId = $('#reservationId').val();
+            if (reservationId) {
+                $.ajax({
+                    url: '/reserve/reserve?id=' + reservationId,
+                    type: 'GET',
+                    success: function(response) {
+                        displayData(response);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                        $('#reservationDetails').html('<p>An error has occurred</p>');
+                    }
+                });
+            } else {
+                alert('Please enter a reservation ID');
+            }
+        });
+
+        $('#reservationForm').submit(function(event){
+            event.preventDefault();
+            submitReservationForm();
+        });
+
+
+
+    });
+
+    function displayData(data) {
+        $('#svcStateName').val(data.svcStateName);
+        $('#imageUrl').val(data.imageUrl);
+        $('#svcName').val(data.svcName);
+        $('#placeName').val(data.placeName);
+        $('#areaName').val(data.areaName);
+        $('#userTargetInfo').val(data.userTargetInfo);
+        $('#rcptBeginDate').val(data.rcptBeginDate);
+        $('#rcptEndDate').val(data.rcptEndDate);
+        $('#svcOpenBeginDate').val(data.svcOpenBeginDate);
+        $('#svcOpenEndDate').val(data.svcOpenEndDate);
+        $('#svcUseBeginTime').val(data.svcUseBeginTime);
+        $('#svcUseEndTime').val(data.svcUseEndTime);
+        $('#placeX').val(data.placeX);
+        $('#placeY').val(data.placeY);
+        $('#detailInfo').val(data.detailInfo);
+        $('#revokeStandDayName').val(data.revokeStandDayName);
+    }
+
+    function submitReservationForm(){
+        var formData = {
+            id: $('#reservationId').val(),
+            svcStateName: $('#svcStateName').val(),
+            imageUrl: $('#imageUrl').val(),
+            svcName: $('#svcName').val(),
+            placeName: $('#placeName').val(),
+            areaName: $('#areaName').val(),
+            userTargetInfo: $('#userTargetInfo').val(),
+            rcptBeginDate: $('#rcptBeginDate').val(),
+            rcptEndDate: $('#rcptEndDate').val(),
+            svcOpenBeginDate: $('#svcOpenBeginDate').val(),
+            svcOpenEndDate: $('#svcOpenEndDate').val(),
+            svcUseBeginTime: $('#svcUseBeginTime').val(),
+            svcUseEndTime: $('#svcUseEndTime').val(),
+            placeX: $('#placeX').val(),
+            placeY: $('#placeY').val(),
+            detailInfo: $('#detailInfo').val(),
+            revokeStandDayName: $('#revokeStandDayName').val()
+        };
+
+        $.ajax({
+            url: '/reserve/reserve',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                console.log('Success:', response);
+                alert(response);
+            },
+            error: function(xhr, status, error) {
+                console.log('Error:', xhr.responseText);
+                alert('Error submitting reservation.');
+            }
+        });
+    }
+</script>
+</body>
+</html>

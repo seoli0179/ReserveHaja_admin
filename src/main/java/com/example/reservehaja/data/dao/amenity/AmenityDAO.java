@@ -1,5 +1,6 @@
 package com.example.reservehaja.data.dao.amenity;
 
+import com.example.reservehaja.data.dto.reserve.ReserveUpdateRequestDto;
 import com.example.reservehaja.data.entity.Amenity;
 import com.example.reservehaja.data.repo.AmenityRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,27 @@ public class AmenityDAO {
     }
 
     public Optional<Amenity> selectAmenity(Long id) {
-
         return amenityRepository.findById(id);
+    }
+
+    public boolean updateAmenity(ReserveUpdateRequestDto dto) {
+
+        try {
+
+            Optional<Amenity> amenity = amenityRepository.findById(dto.getId());
+
+            if(amenity.isPresent()) {
+                amenityRepository.save(dto.toEntity(amenity.get()));
+                return true;
+            }
+
+            return false;
+
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return false;
     }
 
     public boolean isEmptyAmenitySvcId(String svcId) {
@@ -31,7 +51,18 @@ public class AmenityDAO {
     }
 
     public boolean isAmenityId(Long id) {
-        return amenityRepository.findById(id).isEmpty();
+        return amenityRepository.findById(id).isPresent();
     }
 
+    public boolean deleteAmenity(Long id) {
+        try {
+            if(isAmenityId(id)){
+                amenityRepository.deleteById(id);
+                return true;
+            }
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
+    }
 }

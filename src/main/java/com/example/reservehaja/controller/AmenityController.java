@@ -2,6 +2,7 @@ package com.example.reservehaja.controller;
 
 import com.example.reservehaja.data.dto.reserve.ReserveRequestDto;
 import com.example.reservehaja.data.dto.reserve.ReserveResponseDto;
+import com.example.reservehaja.data.dto.reserve.ReserveUpdateRequestDto;
 import com.example.reservehaja.data.dto.reserveInfoJson.ReserveJsonArrayRequestDto;
 import com.example.reservehaja.service.amenity.AmenityService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,16 @@ public class AmenityController {
 
         return amenityService.selectAmenity(id);
 
+    }
+
+    @PutMapping("reserve")
+    public boolean reserveUpdate(@RequestBody ReserveUpdateRequestDto dto) {
+        return amenityService.updateAmenity(dto);
+    }
+
+    @DeleteMapping("reserve")
+    public boolean reserveDelete(@Param("id") Long id) {
+        return amenityService.deleteAmenity(id);
     }
 
 }

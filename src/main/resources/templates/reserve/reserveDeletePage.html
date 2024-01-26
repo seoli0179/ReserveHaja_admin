@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reservation Details</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>Reservation Details</h1>
+<label for="reservationId">Reservation ID:</label>
+<input type="text" id="reservationId">
+<button id="deleteData">Delete Reservation Data</button>
+
+<script>
+  $(document).ready(function() {
+    $('#deleteData').click(function() {
+      var reservationId = $('#reservationId').val();
+      if (reservationId) {
+        $.ajax({
+          url: '/reserve/reserve?id=' + reservationId,
+          type: 'DELETE',
+          success: function(response) {
+            alert(response);
+          },
+          error: function(error) {
+            console.log('Error:', error);
+            $('#reservationDetails').html('<p>An error has occurred</p>');
+          }
+        });
+      } else {
+        alert('Please enter a reservation ID');
+      }
+    });
+  });
+</script>
+</body>
+</html>

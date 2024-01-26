@@ -60,7 +60,6 @@ public class SecurityConfig {
                         logoutConfig.logoutSuccessUrl("/")
                                 .logoutUrl("/logout")
                 )
-
                 .userDetailsService(myUserDetailsService);
 
         return http.build();

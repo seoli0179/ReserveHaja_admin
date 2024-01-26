@@ -1,5 +1,6 @@
 package com.example.reservehaja.data.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,12 +33,16 @@ public class Amenity {
 
     private String userTargetInfo; // 서비스 대상
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S", timezone = "Asia/Seoul")
     private LocalDateTime rcptBeginDate; // 접수시작일시
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S", timezone = "Asia/Seoul")
     private LocalDateTime rcptEndDate; // 접수종료일시
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S", timezone = "Asia/Seoul")
     private LocalDateTime svcOpenBeginDate; // 서비스개시 시작일시
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.S", timezone = "Asia/Seoul")
     private LocalDateTime svcOpenEndDate; // 서비스개시 종료일시
 
     private LocalTime svcUseBeginTime; // 서비스이용 시작시간
