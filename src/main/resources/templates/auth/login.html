@@ -10,34 +10,45 @@
 <form id="loginForm" class="form-signup">
     <input type="text" id="username" name="username" class="form-control" placeholder="아이디" autofocus=""/>
     <input type="password" id="password" name="password" class="form-control" placeholder="비밀번호"/>
-    <input id="submit" style="display :inline-block;" type="button" value="로그인"/>
+    <input id="submit" type="button" style="display :inline-block;" value="로그인"/>
     <a href="/auth/join" class="btn btn-info active" role="button">회원가입</a>
 </form>
 
 <script>
     $(document).ready(function() {
         $('#submit').click(function() {
-            var data = {
-                username: $('#username').val(),
-                password: $('#password').val()
-            };
-            $.ajax({
-                type: 'POST',
-                url: '/login/login-proc',
-                data: data,
-                success: function(response) {
-                    // Handle success - Redirect or update UI
-                    console.log('Login Successful');
-                    window.location.href = '/';
-                },
-                error: function(xhr, status, error) {
-                    // Handle error
-                    alert(xhr.responseText);
-                    console.log('Login Failed');
-                }
-            });
+           login();
         });
+        $('#loginForm').on('keypress', function(e) {
+            // Enter 키가 눌렸는지 확인 (Enter 키의 코드는 13)
+            if (e.which == 13) {
+                // 폼 제출
+                login();
+            }
+        });
+
     });
+    function login(){
+        var data = {
+            username: $('#username').val(),
+            password: $('#password').val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/login/login-proc',
+            data: data,
+            success: function(response) {
+                // Handle success - Redirect or update UI
+                console.log('Login Successful');
+                window.location.href = '/';
+            },
+            error: function(xhr, status, error) {
+                // Handle error
+                alert(xhr.responseText);
+                console.log('Login Failed');
+            }
+        });
+    }
 </script>
 </body>
 </html>
