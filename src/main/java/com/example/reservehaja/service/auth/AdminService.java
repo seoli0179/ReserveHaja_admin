@@ -1,5 +1,6 @@
 package com.example.reservehaja.service.auth;
 
+import com.example.reservehaja.data.dao.admin.AdminDAO;
 import com.example.reservehaja.data.dto.auth.AdminJoinRequestDto;
 import com.example.reservehaja.data.repo.AdminRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,17 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AdminService {
 
-    private final AdminRepository adminRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AdminDAO adminDAO;
 
-    public String addUser(AdminJoinRequestDto requestDto) {
+    public boolean addUser(AdminJoinRequestDto requestDto) {
 
-        if(adminRepository.findByAdminId(requestDto.getAdminId()).isEmpty()){
-            adminRepository.save(requestDto.toEntity(passwordEncoder));
-            return "SUCCESS";
-        }else{
-            return "FAIL";
-        }
+        return adminDAO.addAdmin(requestDto);
 
     }
 

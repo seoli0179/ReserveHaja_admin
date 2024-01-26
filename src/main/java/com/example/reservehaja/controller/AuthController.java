@@ -15,7 +15,7 @@ public class AuthController {
     private final AdminService adminService;
 
     @PostMapping("/join")
-    public String adminJoin(AdminJoinRequestDto requestDto) {
+    public boolean adminJoin(@RequestBody AdminJoinRequestDto requestDto) {
         return adminService.addUser(requestDto);
     }
 

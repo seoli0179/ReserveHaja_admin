@@ -4,6 +4,7 @@ import com.example.reservehaja.data.entity.Admin;
 import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
