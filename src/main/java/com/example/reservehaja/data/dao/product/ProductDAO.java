@@ -1,4 +1,4 @@
-package com.example.reservehaja.data.dao;
+package com.example.reservehaja.data.dao.product;
 
 import com.example.reservehaja.data.entity.Product;
 

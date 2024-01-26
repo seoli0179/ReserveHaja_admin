@@ -1,14 +1,14 @@
 package com.example.reservehaja.controller;
 
-import com.example.reservehaja.data.dao.dto.ReservationInfo.ReservationInfoResponseDto;
-import com.example.reservehaja.service.AmenityService;
+import com.example.reservehaja.data.dto.reservationInfoJson.ReservationInfoResponseDto;
+import com.example.reservehaja.service.amenity.AmenityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class AmenityController {
 
     private final AmenityService amenityService;
 

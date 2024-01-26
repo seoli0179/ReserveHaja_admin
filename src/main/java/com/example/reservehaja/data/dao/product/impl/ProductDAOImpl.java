@@ -1,6 +1,6 @@
-package com.example.reservehaja.data.dao.impl;
+package com.example.reservehaja.data.dao.product.impl;
 
-import com.example.reservehaja.data.dao.ProductDAO;
+import com.example.reservehaja.data.dao.product.ProductDAO;
 import com.example.reservehaja.data.entity.Product;
 import com.example.reservehaja.data.repo.ProductRepository;
 import org.springframework.stereotype.Component;

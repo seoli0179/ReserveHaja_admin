@@ -1,8 +1,7 @@
-package com.example.reservehaja.data.dao.dto.ReservationInfo;
+package com.example.reservehaja.data.dto.reservationInfoJson;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;

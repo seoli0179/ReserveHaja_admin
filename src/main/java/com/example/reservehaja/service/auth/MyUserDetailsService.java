@@ -1,4 +1,4 @@
-package com.example.reservehaja.service;
+package com.example.reservehaja.service.auth;
 
 import com.example.reservehaja.data.entity.Admin;
 import com.example.reservehaja.data.repo.AdminRepository;

@@ -1,4 +1,4 @@
-package com.example.reservehaja.data.dao.dto;
+package com.example.reservehaja.data.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,7 @@
-package com.example.reservehaja.service;
+package com.example.reservehaja.service.product;
 
-import com.example.reservehaja.data.dao.dto.ProductDto;
-import com.example.reservehaja.data.dao.dto.ProductResponseDto;
+import com.example.reservehaja.data.dto.product.ProductDto;
+import com.example.reservehaja.data.dto.product.ProductResponseDto;
 
 public interface ProductService {
 

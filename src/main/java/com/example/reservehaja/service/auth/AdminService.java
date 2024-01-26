@@ -1,6 +1,6 @@
-package com.example.reservehaja.service;
+package com.example.reservehaja.service.auth;
 
-import com.example.reservehaja.data.dao.dto.AdminJoinRequestDto;
+import com.example.reservehaja.data.dto.auth.AdminJoinRequestDto;
 import com.example.reservehaja.data.repo.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

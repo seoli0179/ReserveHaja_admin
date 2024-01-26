@@ -1,7 +1,7 @@
 package com.example.reservehaja.controller;
 
-import com.example.reservehaja.data.dao.dto.AdminJoinRequestDto;
-import com.example.reservehaja.service.AdminService;
+import com.example.reservehaja.data.dto.auth.AdminJoinRequestDto;
+import com.example.reservehaja.service.auth.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class LoginController {
+public class AuthController {
 
     private final AdminService adminService;
 

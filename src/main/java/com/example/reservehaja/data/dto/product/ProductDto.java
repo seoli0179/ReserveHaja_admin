@@ -1,15 +1,14 @@
-package com.example.reservehaja.data.dao.dto;
+package com.example.reservehaja.data.dto.product;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
+@AllArgsConstructor
 @Getter
 @Setter
-public class ProductResponseDto {
+public class ProductDto {
 
-    private Long number;
     private String name;
     private int price;
     private int stock;

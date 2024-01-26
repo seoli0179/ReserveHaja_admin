@@ -1,10 +1,10 @@
-package com.example.reservehaja.service.impl;
+package com.example.reservehaja.service.product.impl;
 
-import com.example.reservehaja.data.dao.ProductDAO;
-import com.example.reservehaja.data.dao.dto.ProductDto;
-import com.example.reservehaja.data.dao.dto.ProductResponseDto;
+import com.example.reservehaja.data.dao.product.ProductDAO;
+import com.example.reservehaja.data.dto.product.ProductDto;
+import com.example.reservehaja.data.dto.product.ProductResponseDto;
 import com.example.reservehaja.data.entity.Product;
-import com.example.reservehaja.service.ProductService;
+import com.example.reservehaja.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

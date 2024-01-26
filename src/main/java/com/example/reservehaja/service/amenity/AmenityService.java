@@ -1,16 +1,14 @@
-package com.example.reservehaja.service;
+package com.example.reservehaja.service.amenity;
 
-import com.example.reservehaja.data.dao.dto.ReservationInfo.ReservationInfoResponseDto;
+import com.example.reservehaja.data.dto.reservationInfoJson.ReservationInfoResponseDto;
 import com.example.reservehaja.data.entity.Amenity;
 import com.example.reservehaja.data.repo.AmenityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service

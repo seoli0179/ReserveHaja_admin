@@ -1,6 +1,6 @@
 package com.example.reservehaja.config;
 
-import com.example.reservehaja.service.MyUserDetailsService;
+import com.example.reservehaja.service.auth.MyUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

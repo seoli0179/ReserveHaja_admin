@@ -1,4 +1,4 @@
-package com.example.reservehaja.data.dao.dto;
+package com.example.reservehaja.data.dto.auth;
 
 import com.example.reservehaja.data.entity.Admin;
 import jakarta.persistence.Column;
