@@ -1,4 +1,4 @@
-package com.example.reservehaja.data.dto.reservationInfoJson;
+package com.example.reservehaja.data.dto.reserveInfoJson;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

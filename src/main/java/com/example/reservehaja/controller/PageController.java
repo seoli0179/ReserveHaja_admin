@@ -28,4 +28,19 @@ public class PageController {
         return "/admin/admin";
     }
 
+    @GetMapping("/reserve")
+    public String reserveIndexPage(){
+        return "/reserve/index";
+    }
+
+    @GetMapping("/reserve/create")
+    public String reserveCreatePage(){
+        return "/reserve/reserveCreatePage";
+    }
+
+    @GetMapping("/reserve/select")
+    public String reserveSelectPage(){
+        return "/reserve/reserveSelectPage";
+    }
+
 }

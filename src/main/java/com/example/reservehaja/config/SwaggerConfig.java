@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi chatOpenApi() {
-        String[] paths = {"/auth/**", "/product/**", "/admin/**"};    // 명세서에 보여줄 경로 설정
+        String[] paths = {"/auth/**", "/product/**", "/admin/**", "/reserve/**"};    // 명세서에 보여줄 경로 설정
 
         return GroupedOpenApi.builder()
                 .group("예제 API v1")
