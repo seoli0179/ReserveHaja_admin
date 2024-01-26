@@ -18,5 +18,11 @@ public class AdminService {
         return adminDAO.addAdmin(requestDto);
 
     }
+/* 순환참조에러 발생 securityConfig -> customAuthenticationSuccessHandler -> adminService -> adminDAO // PasswordEncoder 때문인것으로 예상
+    public String selectAdminName(String adminId) {
+        return adminDAO.selectAdminName(adminId);
+    }
+
+ */
 
 }

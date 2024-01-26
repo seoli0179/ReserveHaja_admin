@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reserve JSON Array Submission</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h2>Reservation JSON Array Submission</h2>
+
+<form id="jsonArrayForm">
+    <label for="jsonData">JSON Data:</label>
+    <textarea id="jsonData" rows="10" cols="50" placeholder='{"list_total_count": 0, "RESULT": {}, "row": []}'></textarea><br><br>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    $(document).ready(function() {
+        $('#jsonArrayForm').submit(function(event) {
+            event.preventDefault();
+            submitJsonArray();
+        });
+    });
+
+    function submitJsonArray() {
+        var jsonData = $('#jsonData').val();
+        try {
+            var parsedData = JSON.parse(jsonData);
+            $.ajax({
+                url: '/reserve/jsonArray',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(parsedData),
+                success: function(response) {
+                    console.log('Success:', response);
+                    alert('Data submitted successfully : ' + response);
+                },
+                error: function(xhr, status, error) {
+                    console.log('Error:', xhr.responseText);
+                    alert('Error submitting data.');
+                }
+            });
+        } catch(e) {
+            alert('Invalid JSON format');
+        }
+    }
+</script>
+
+</body>
+</html>

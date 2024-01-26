@@ -10,7 +10,7 @@ public class PageController {
 
     @GetMapping("/")
     public String indexPage() {
-        return "/auth/login";
+        return "/index";
     }
 
     @GetMapping("/auth/login")
@@ -29,24 +29,33 @@ public class PageController {
     }
 
     @GetMapping("/reserve")
-    public String reserveIndexPage(){
+    public String reserveIndexPage() {
         return "/reserve/index";
     }
 
     @GetMapping("/reserve/create")
-    public String reserveCreatePage(){
+    public String reserveCreatePage() {
         return "/reserve/reserveCreatePage";
     }
 
     @GetMapping("/reserve/select")
-    public String reserveSelectPage(){
+    public String reserveSelectPage() {
         return "/reserve/reserveSelectPage";
     }
 
     @GetMapping("/reserve/update")
-    public String reserveUpdatePage() {return "/reserve/reserveUpdatePage";}
+    public String reserveUpdatePage() {
+        return "/reserve/reserveUpdatePage";
+    }
 
     @GetMapping("/reserve/delete")
-    public String reserveDeletePage() {return "/reserve/reserveDeletePage";}
+    public String reserveDeletePage() {
+        return "/reserve/reserveDeletePage";
+    }
+
+    @GetMapping("/reserve/json")
+    public String reserveJsonPage() {
+        return "/reserve/reserveJsonPage";
+    }
 
 }

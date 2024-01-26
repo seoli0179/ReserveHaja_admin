@@ -7,6 +7,9 @@ import com.example.reservehaja.data.dto.reserveInfoJson.ReserveJsonArrayRequestD
 import com.example.reservehaja.service.amenity.AmenityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,7 +19,7 @@ public class AmenityController {
 
     private final AmenityService amenityService;
 
-    @PostMapping("/resvOpenApiArray")
+    @PostMapping("/jsonArray")
     public int reserveJsonArray(@RequestBody ReserveJsonArrayRequestDto dto) {
 
         System.out.println(dto.getRESULT().getCODE());
@@ -33,7 +36,23 @@ public class AmenityController {
 
     @GetMapping("reserve")
     public ReserveResponseDto reserveSelect(@Param("id") Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            // authentication 객체로부터 사용자 정보를 추출합니다.
+            Object principal = authentication.getPrincipal();
 
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+
+                // 사용자의 이름, 권한 등을 여기에서 얻을 수 있습니다.
+                String username = userDetails.getUsername();
+                // 다른 정보도 사용 가능, 예: userDetails.getAuthorities()
+
+                System.out.println(username);
+                // 여기에서 username 또는 다른 사용자 세부 정보를 사용합니다.
+                // 예: 데이터베이스 조회, 로그 남기기 등
+            }
+        }
         return amenityService.selectAmenity(id);
 
     }

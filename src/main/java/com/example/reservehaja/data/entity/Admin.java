@@ -13,7 +13,7 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
+    @Column(nullable = false, unique = true)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
     private String adminId;
 
     @Column(nullable = false)

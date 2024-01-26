@@ -1,5 +1,8 @@
 package com.example.reservehaja.config;
 
+import com.example.reservehaja.handler.CustomAuthenticationFailureHandler;
+import com.example.reservehaja.handler.CustomAuthenticationSuccessHandler;
+import com.example.reservehaja.handler.CustomLogoutSuccessHandler;
 import com.example.reservehaja.service.auth.MyUserDetailsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
@@ -26,6 +29,9 @@ import java.io.PrintWriter;
 public class SecurityConfig {
 
     private final MyUserDetailsService myUserDetailsService;
+    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
+    private final CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -41,7 +47,7 @@ public class SecurityConfig {
                 .headers((headerConfig) -> headerConfig.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests((authorizeRequests) ->
                         authorizeRequests
-                                .requestMatchers("/", "/js/**").permitAll()
+                                .requestMatchers("/js/**").permitAll()
                                 .requestMatchers("/auth/login").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers("/product/**").permitAll()
@@ -50,14 +56,18 @@ public class SecurityConfig {
                 )
                 .exceptionHandling((exceptionConfig) -> exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler))
                 .formLogin((formLogin) ->
-                        formLogin.loginPage("/login")
+                        formLogin.loginPage("/auth/login")
                                 .usernameParameter("username")
                                 .passwordParameter("password")
                                 .loginProcessingUrl("/login/login-proc")
-                                .defaultSuccessUrl("/admin", true)
+                                //.defaultSuccessUrl("/admin", true)
+                                .successHandler(customAuthenticationSuccessHandler)
+                                .failureHandler(customAuthenticationFailureHandler)
                 )
                 .logout((logoutConfig) ->
-                        logoutConfig.logoutSuccessUrl("/")
+                        logoutConfig
+                                .logoutSuccessHandler(customLogoutSuccessHandler)
+                                .logoutSuccessUrl("/")
                                 .logoutUrl("/logout")
                 )
                 .userDetailsService(myUserDetailsService);
@@ -68,6 +78,8 @@ public class SecurityConfig {
 
     private final AuthenticationEntryPoint unauthorizedEntryPoint =
             (request, response, authException) -> {
+                response.sendRedirect("/auth/login"); // 로그인 페이지 URL로 리다이렉트
+        /*
                 ErrorResponse fail = new ErrorResponse(HttpStatus.UNAUTHORIZED, "Spring security unauthorized..."); // 로그인 X
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 String json = new ObjectMapper().writeValueAsString(fail);
@@ -75,10 +87,14 @@ public class SecurityConfig {
                 PrintWriter writer = response.getWriter();
                 writer.write(json);
                 writer.flush();
+
+         */
             };
 
     private final AccessDeniedHandler accessDeniedHandler =
             (request, response, accessDeniedException) -> {
+                response.sendRedirect("/auth/login"); // 로그인 페이지 URL로 리다이렉트
+        /*
                 ErrorResponse fail = new ErrorResponse(HttpStatus.FORBIDDEN, "Spring security forbidden...");   // 권한 X
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 String json = new ObjectMapper().writeValueAsString(fail);
@@ -86,6 +102,8 @@ public class SecurityConfig {
                 PrintWriter writer = response.getWriter();
                 writer.write(json);
                 writer.flush();
+
+         */
             };
 
     @Getter
