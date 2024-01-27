@@ -1,6 +1,9 @@
 package com.example.reservehaja.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -10,7 +13,13 @@ public class PageController {
 
     @GetMapping("/")
     public String indexPage() {
-        return "/index";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
+            // 사용자가 인증되었음
+            return "/index";
+        }
+
+        return "/auth/login";
     }
 
     @GetMapping("/auth/login")
