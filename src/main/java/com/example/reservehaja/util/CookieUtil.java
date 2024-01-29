@@ -10,7 +10,7 @@ public class CookieUtil {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/"); // 쿠키가 전송될 경로 설정, '/'는 모든 경로에 적용됩니다.
         cookie.setMaxAge(maxAgeInSeconds); // 쿠키의 유효 기간 설정(초 단위)
-        cookie.setHttpOnly(true); // JavaScript를 통해 쿠키에 접근할 수 없도록 설정
+        cookie.setHttpOnly(false); // JavaScript를 통해 쿠키에 접근할 수 없도록 설정
         response.addCookie(cookie); // 응답에 쿠키 추가
     }
 

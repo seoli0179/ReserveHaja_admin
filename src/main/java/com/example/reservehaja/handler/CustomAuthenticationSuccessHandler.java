@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,8 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Component
@@ -26,7 +29,7 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
-        if (authentication != null && authentication.isAuthenticated()) {
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
             // authentication 객체로부터 사용자 정보를 추출합니다.
             Object principal = authentication.getPrincipal();
 
@@ -38,8 +41,9 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
                 if(admin.isPresent()){
                     String adminName = admin.get().getAdminName();
-                    CookieUtil.createCookie(response, "userId", admin.get().getAdminId(), 3600);
-                    CookieUtil.createCookie(response, "username", adminName, 3600);
+                    adminName = URLEncoder.encode(adminName, StandardCharsets.UTF_8);   // 쿠키에 한글값 직접 넣으면 안됨!!!!
+                    CookieUtil.createCookie(response, "adminId", admin.get().getAdminId(), 3600);
+                    CookieUtil.createCookie(response, "adminName", adminName, 3600);
                 }
 
             }

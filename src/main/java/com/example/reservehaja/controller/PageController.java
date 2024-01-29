@@ -13,13 +13,7 @@ public class PageController {
 
     @GetMapping("/")
     public String indexPage() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
-            // 사용자가 인증되었음
-            return "/index";
-        }
-
-        return "/auth/login";
+        return "/index";
     }
 
     @GetMapping("/auth/login")

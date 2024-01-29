@@ -2,6 +2,7 @@ package com.example.reservehaja.controller;
 
 import com.example.reservehaja.data.dto.auth.AdminJoinRequestDto;
 import com.example.reservehaja.service.auth.AdminService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

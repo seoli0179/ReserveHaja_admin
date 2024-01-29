@@ -9,11 +9,12 @@ import lombok.*;
 @Setter //Lombok Setter 메소드 자동 생성(편의성)
 public class Admin {
 
-    @Id //테이블 기본키 지정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @Column(nullable = false, unique = true)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
+    //@Id //테이블 기본키 지정
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //private Long id;
+
+    @Id   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
     private String adminId;
 
     @Column(nullable = false)
@@ -28,7 +29,7 @@ public class Admin {
     @Column(nullable = false)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
     private String adminZip;
 
-    @Column(nullable = false)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
+    @Column(nullable = false, unique = true)   //테이블 컬럼 지정(별다른 설정 없을 시 생략 가능)
     private String adminEmail;
 
 }
