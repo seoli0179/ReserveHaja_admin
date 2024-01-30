@@ -2,70 +2,196 @@
 <html>
 <head>
     <title>Reservation Form</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!--<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+    <script src="/js/jquery-ui.js"></script>
+    <script src="/js/jquery-ui.multidatespicker.js"></script>
+    <script src="/js/jquery-clockpicker.min.js"></script>
+    <link rel="stylesheet" href="/css/jquery-clockpicker.min.css">
 </head>
 <body>
 <form id="reservationForm">
-    <label for="svcStateName">Service State Name:</label>
+    <label for="svcStateName">서비스 상태:</label>
     <input type="text" id="svcStateName" placeholder="Active/Inactive"><br>
 
-    <label for="imageUrl">Image URL:</label>
+    <label for="imageUrl">이미지 경로:</label>
     <input type="text" id="imageUrl" placeholder="http://example.com/image.jpg"><br>
 
-    <label for="svcName">Service Name:</label>
+    <label for="svcName">서비스 이름:</label>
     <input type="text" id="svcName" placeholder="서비스 이름"><br>
 
-    <label for="placeName">Place Name:</label>
+    <label for="placeName">장소명:</label>
     <input type="text" id="placeName" placeholder="강남구박물관"><br>
 
-    <label for="areaName">Area Name:</label>
+    <label for="areaName">지역명:</label>
     <input type="text" id="areaName" placeholder="강남구"><br>
 
-    <label for="userTargetInfo">User Target Info:</label>
+    <label for="userTargetInfo">유저 타겟층:</label>
     <input type="text" id="userTargetInfo" placeholder="제한없음"><br>
 
+    <label for="rcptDate">예약 기간:</label>
+    <input id="rcptDate"><br>
+    <label for="rcptBeginDateTime">예약 시간</label>
+    <input id="rcptBeginDateTime" value="" data-default="00:00">~
+    <input id="rcptEndDateTime" value="" data-default="23:59"><br>
+    <!--
     <label for="rcptBeginDate">Receipt Begin Date:</label>
     <input type="text" id="rcptBeginDate" placeholder="2024-01-01 08:00:00.0"><br>
 
+
     <label for="rcptEndDate">Receipt End Date:</label>
     <input type="text" id="rcptEndDate" placeholder="2024-01-01 08:00:00.0"><br>
-
+    -->
+    <label for="svcOpenDate">서비스 오픈기간:</label>
+    <input id="svcOpenDate"><br>
+    <label for="svcOpenBeginTime">서비스 오픈시간:</label>
+    <input id="svcOpenBeginTime" value="" data-default="00:00">~
+    <input id="svcOpenEndTime" value="" data-default="23:59"><br>
+    <!--
     <label for="svcOpenBeginDate">Service Open Begin Date:</label>
     <input type="text" id="svcOpenBeginDate" placeholder="2024-01-01 08:00:00.0"><br>
 
     <label for="svcOpenEndDate">Service Open End Date:</label>
     <input type="text" id="svcOpenEndDate" placeholder="2024-01-01 08:00:00.0"><br>
-
+    -->
+    <!--
     <label for="svcUseBeginTime">Service Use Begin Time:</label>
     <input type="text" id="svcUseBeginTime" placeholder="09:00"><br>
 
     <label for="svcUseEndTime">Service Use End Time:</label>
     <input type="text" id="svcUseEndTime" placeholder="17:00"><br>
+    -->
 
-    <label for="placeX">Place X Coordinate:</label>
+    <label for="svcUseBeginTime">서비스 이용시간:</label>
+    <input id="svcUseBeginTime" value="" data-default="09:00">~
+    <input id="svcUseEndTime" value="" data-default="18:00"><br>
+
+    <label for="placeX">X 좌표:</label>
     <input type="text" id="placeX" placeholder="123.456"><br>
 
-    <label for="placeY">Place Y Coordinate:</label>
+    <label for="placeY">Y 좌표:</label>
     <input type="text" id="placeY" placeholder="987.654"><br>
 
-    <label for="detailInfo">Detail Info:</label>
+    <label for="detailInfo">상세 정보:</label>
     <textarea id="detailInfo" placeholder="상세내용 작성"></textarea><br>
 
-    <label for="revokeStandDayName">Revoke Stand Day Name:</label>
+    <label for="revokeStandDayName">환불 기간:</label>
     <input type="text" id="revokeStandDayName" placeholder="7일전"><br>
 
     <button type="submit">Submit</button>
 </form>
 
 <script>
-    $(document).ready(function(){
-        $('#reservationForm').submit(function(event){
+    $(document).ready(function () {
+
+        $('#rcptBeginDateTime').clockpicker({
+            autoclose: true
+        });
+        $('#rcptEndDateTime').clockpicker({
+            autoclose: true
+        });
+        $('#svcOpenBeginTime').clockpicker({
+            autoclose: true
+        });
+        $('#svcOpenEndTime').clockpicker({
+            autoclose: true
+        });
+        $('#svcUseBeginTime').clockpicker({
+            autoclose: true
+        });
+        $('#svcUseEndTime').clockpicker({
+            autoclose: true
+        });
+
+
+        var selectedDates1 = [];
+        $('#rcptDate').multiDatesPicker({
+            dateFormat: "yy-mm-dd",
+            numberOfMonths: [1, 2],
+            onSelect: function (dateText, inst) {
+                selectedDates1.push(dateText);
+                if (selectedDates1.length === 2) {
+                    // 두 날짜 사이의 모든 날짜 선택
+                    var startDate = new Date(selectedDates1[0]);
+                    var endDate = new Date(selectedDates1[1]);
+
+                    if(startDate>endDate){
+                        var temp = startDate;
+                        startDate = endDate;
+                        endDate = temp;
+                    }
+
+                    var currentDate = new Date(startDate);
+                    var rangeDates = [];
+
+                    while (currentDate <= endDate) {
+                        rangeDates.push($.datepicker.formatDate('yy-mm-dd', currentDate));
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+
+                    $(this).multiDatesPicker('resetDates', 'picked');
+                    $(this).multiDatesPicker('addDates', rangeDates);
+                } else if (selectedDates1.length === 3) {
+                    // 세 번째 선택 시 리셋
+                    $(this).multiDatesPicker('resetDates', 'picked');
+                    selectedDates1 = [];
+                }
+            }
+        });
+
+        var selectedDates2 = [];
+        $('#svcOpenDate').multiDatesPicker({
+            dateFormat: "yy-mm-dd",
+            numberOfMonths: [1, 2],
+            onSelect: function (dateText, inst) {
+                selectedDates2.push(dateText);
+                if (selectedDates1.length === 2) {
+                    // 두 날짜 사이의 모든 날짜 선택
+                    var startDate = new Date(selectedDates2[0]);
+                    var endDate = new Date(selectedDates2[1]);
+
+                    if(startDate>endDate){
+                        var temp = startDate;
+                        startDate = endDate;
+                        endDate = temp;
+                    }
+
+                    var currentDate = new Date(startDate);
+                    var rangeDates = [];
+
+                    while (currentDate <= endDate) {
+                        rangeDates.push($.datepicker.formatDate('yy-mm-dd', currentDate));
+                        currentDate.setDate(currentDate.getDate() + 1);
+                    }
+
+                    $(this).multiDatesPicker('resetDates', 'picked');
+                    $(this).multiDatesPicker('addDates', rangeDates);
+                } else if (selectedDates2.length === 3) {
+                    // 세 번째 선택 시 리셋
+                    $(this).multiDatesPicker('resetDates', 'picked');
+                    selectedDates2 = [];
+                }
+            }
+        });
+
+        $('#reservationForm').submit(function (event) {
             event.preventDefault();
             submitReservationForm();
         });
     });
 
-    function submitReservationForm(){
+    function submitReservationForm() {
+
+        var rcptDate = $('#rcptDate').multiDatesPicker('getDates');
+        var svcOpenDate = $('#svcOpenDate').multiDatesPicker('getDates');
+
+        var rcptBeginDate = rcptDate[0] + " " + $('#rcptBeginDateTime').val() + ":00.0";
+        var rcptEndDate = rcptDate[rcptDate.length - 1] + " " + $('#rcptEndDateTime').val() + ":00.0";
+        var svcOpenBeginDate = svcOpenDate[0] + " " + $('#svcOpenBeginTime').val() + ":00.0";
+        var svcOpenEndDate = svcOpenDate[svcOpenDate.length - 1] + " " + $('#svcOpenEndTime').val() + ":00.0";
+
         var formData = {
             svcStateName: $('#svcStateName').val(),
             imageUrl: $('#imageUrl').val(),
@@ -73,32 +199,36 @@
             placeName: $('#placeName').val(),
             areaName: $('#areaName').val(),
             userTargetInfo: $('#userTargetInfo').val(),
-            rcptBeginDate: $('#rcptBeginDate').val(),
-            rcptEndDate: $('#rcptEndDate').val(),
-            svcOpenBeginDate: $('#svcOpenBeginDate').val(),
-            svcOpenEndDate: $('#svcOpenEndDate').val(),
-            svcUseBeginTime: $('#svcUseBeginTime').val(),
-            svcUseEndTime: $('#svcUseEndTime').val(),
+            rcptBeginDate: rcptBeginDate,
+            rcptEndDate: rcptEndDate,
+            svcOpenBeginDate: svcOpenBeginDate,
+            svcOpenEndDate: svcOpenEndDate,
+            svcUseBeginTime: $('#svcUseBeginTime').val(), // 서비스이용 시작시간
+            svcUseEndTime: $('#svcUseEndTime').val(), // 서비스이용 종료시간
             placeX: $('#placeX').val(),
             placeY: $('#placeY').val(),
             detailInfo: $('#detailInfo').val(),
             revokeStandDayName: $('#revokeStandDayName').val()
         };
 
+        console.log(formData);
+
         $.ajax({
             url: '/reserve/reserve',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
-            success: function(response) {
+            success: function (response) {
                 console.log('Success:', response);
                 alert(response);
+                location.href = "/reserve";
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.log('Error:', xhr.responseText);
                 alert('Error submitting reservation.');
             }
         });
+
     }
 </script>
 </body>
