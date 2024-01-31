@@ -1,6 +1,7 @@
 package com.example.reservehaja.data.dto.reserve;
 
 import com.example.reservehaja.data.entity.Amenity;
+import com.example.reservehaja.data.state.ServiceState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +14,7 @@ public class ReserveResponseDto {
 
     private Long id;
     private String svcId;
-    private String svcStateName; // 서비스 상태
+    private ServiceState svcStateName; // 서비스 상태
     private String imageUrl; // 이미지 경로
     private String svcName; // 서비스 명
     private String placeName; // 장소명

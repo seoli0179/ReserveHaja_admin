@@ -5,7 +5,9 @@ import com.example.reservehaja.data.entity.Amenity;
 import com.example.reservehaja.data.repo.AmenityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -26,20 +28,28 @@ public class AmenityDAO {
         return amenityRepository.findById(id);
     }
 
+    public Optional<Amenity> selectAmenityWhereAdminId(Long id, String adminId) {
+        return amenityRepository.findByIdAndAdmin_AdminId(id, adminId);
+    }
+
+    public List<Amenity> selectAmenityList(String adminId) {
+        return amenityRepository.findByAdmin_AdminId(adminId);
+    }
+
     public boolean updateAmenity(ReserveUpdateRequestDto dto) {
 
         try {
 
             Optional<Amenity> amenity = amenityRepository.findById(dto.getId());
 
-            if(amenity.isPresent()) {
+            if (amenity.isPresent()) {
                 amenityRepository.save(dto.toEntity(amenity.get()));
                 return true;
             }
 
             return false;
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
@@ -54,15 +64,21 @@ public class AmenityDAO {
         return amenityRepository.findById(id).isPresent();
     }
 
-    public boolean deleteAmenity(Long id) {
+    public boolean isAmenityIdAndAdminId(Long id, String adminId) {
+        return amenityRepository.findByIdAndAdmin_AdminId(id, adminId).isPresent();
+    }
+
+    @Transactional
+    public boolean deleteAmenity(Long id, String adminId) {
         try {
-            if(isAmenityId(id)){
-                amenityRepository.deleteById(id);
+            if (isAmenityIdAndAdminId(id, adminId)) {
+                amenityRepository.deleteAmenityByIdAndAdmin_AdminId(id, adminId);
                 return true;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
     }
+
 }

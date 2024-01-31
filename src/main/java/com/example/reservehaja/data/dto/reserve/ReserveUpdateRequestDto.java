@@ -1,6 +1,7 @@
 package com.example.reservehaja.data.dto.reserve;
 
 import com.example.reservehaja.data.entity.Amenity;
+import com.example.reservehaja.data.state.ServiceState;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -34,8 +35,12 @@ public class ReserveUpdateRequestDto {
 
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         DateTimeFormatter pattern2 = DateTimeFormatter.ofPattern("HH:mm");
-
-        amenity.setSvcStateName(svcStateName); // 서비스 상태
+        try {
+            amenity.setSvcStateName(ServiceState.valueOf(svcStateName)); // 서비스 상태
+        } catch (IllegalArgumentException e) {
+            System.out.println("잘못된 상태 값입니다.");
+            // 적절한 예외 처리 로직
+        }
         amenity.setImageUrl(imageUrl);  // 이미지 경로
         amenity.setSvcName(svcName);  // 서비스 명
         amenity.setPlaceName(placeName);  // 장소명

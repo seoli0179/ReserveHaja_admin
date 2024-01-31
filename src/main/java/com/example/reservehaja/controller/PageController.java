@@ -41,6 +41,12 @@ public class PageController {
         return "/reserve/reserveCreatePage";
     }
 
+    @GetMapping("/reserve/list")
+    public String reserveListPage() {
+        return "/reserve/reserveListPage";
+    }
+
+
     @GetMapping("/reserve/select")
     public String reserveSelectPage() {
         return "/reserve/reserveSelectPage";

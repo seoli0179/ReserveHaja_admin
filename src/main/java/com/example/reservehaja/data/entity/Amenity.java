@@ -1,5 +1,6 @@
 package com.example.reservehaja.data.entity;
 
+import com.example.reservehaja.data.state.ServiceState;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -21,7 +22,8 @@ public class Amenity {
 
     private String svcId; // 서비스Id
 
-    private String svcStateName; // 서비스 상태
+    @Enumerated(EnumType.STRING)
+    private ServiceState svcStateName; // 서비스 상태
 
     private String imageUrl; // 이미지 경로
 
@@ -57,6 +59,10 @@ public class Amenity {
     private String detailInfo; // 상세정보
 
     private String revokeStandDayName; // 취소기간 기준정보
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false) //optional = false -> Not null
+    @JoinColumn(name = "adminId")
+    private Admin admin;
 
 
 

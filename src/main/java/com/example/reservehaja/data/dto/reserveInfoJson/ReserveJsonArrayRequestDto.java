@@ -1,6 +1,7 @@
 package com.example.reservehaja.data.dto.reserveInfoJson;
 
 import com.example.reservehaja.data.entity.Amenity;
+import com.example.reservehaja.data.state.ServiceState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,7 +28,20 @@ public class ReserveJsonArrayRequestDto {
         Amenity amenity = new Amenity();
 
         amenity.setSvcId(row.get(index).getSVCID()); // 서비스Id
-        amenity.setSvcStateName(row.get(index).getSVCSTATNM()); // 서비스 상태
+
+        switch (row.get(index).getSVCSTATNM()){
+            case "접수중":
+                amenity.setSvcStateName(ServiceState.RESERVE_START); // 서비스 상태
+                break;
+            case "접수종료":
+                amenity.setSvcStateName(ServiceState.RESERVE_END); // 서비스 상태
+                break;
+            case "예약마감":
+                amenity.setSvcStateName(ServiceState.RESERVE_CLOSE); // 서비스 상태
+                break;
+            default:
+                amenity.setSvcStateName(ServiceState.SERVICE_WAIT); // 서비스 상태
+        }
         amenity.setImageUrl(row.get(index).getIMGURL());  // 이미지 경로
         amenity.setSvcName(row.get(index).getSVCNM());  // 서비스 명
         amenity.setPlaceName(row.get(index).getPLACENM());  // 장소명

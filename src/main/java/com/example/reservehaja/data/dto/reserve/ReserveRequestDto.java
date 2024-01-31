@@ -1,6 +1,8 @@
 package com.example.reservehaja.data.dto.reserve;
 
+import com.example.reservehaja.data.entity.Admin;
 import com.example.reservehaja.data.entity.Amenity;
+import com.example.reservehaja.data.state.ServiceState;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -30,14 +33,19 @@ public class ReserveRequestDto {
     private String detailInfo; // 상세정보
     private String revokeStandDayName; // 취소기간 기준정보
 
-    public Amenity toEntity() {
+    public Amenity toEntity(Admin admin) {
 
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
         DateTimeFormatter pattern2 = DateTimeFormatter.ofPattern("HH:mm");
 
         Amenity amenity = new Amenity();
 
-        amenity.setSvcStateName(svcStateName); // 서비스 상태
+        try {
+            amenity.setSvcStateName(ServiceState.valueOf(svcStateName)); // 서비스 상태
+        } catch (IllegalArgumentException e) {
+            System.out.println("잘못된 상태 값입니다.");
+            // 적절한 예외 처리 로직
+        }
         amenity.setImageUrl(imageUrl);  // 이미지 경로
         amenity.setSvcName(svcName);  // 서비스 명
         amenity.setPlaceName(placeName);  // 장소명
@@ -53,6 +61,7 @@ public class ReserveRequestDto {
         amenity.setPlaceY(placeY);  // 장소Y좌표
         amenity.setDetailInfo(detailInfo);  // 상세정보
         amenity.setRevokeStandDayName(revokeStandDayName);
+        amenity.setAdmin(admin);
 
         return amenity;
 

@@ -15,12 +15,18 @@
 
 <label for="reservationId">Reservation ID:</label>
 <input type="text" id="reservationId">
-<button id="loadData">Load Reservation Data</button>
+<button id="loadData">조회</button> <button id="reservationFormSubmit" type="submit">수정</button>
 
 
 <form id="reservationForm">
     <label for="svcStateName">Service State Name:</label>
-    <input type="text" id="svcStateName" placeholder="Active/Inactive"><br>
+    <select id="svcStateName">
+        <option value="SERVICE_WAIT">서비스 대기</option>
+        <option value="RESERVE_START">접수 중</option>
+        <option value="RESERVE_END">접수 종료</option>
+        <option value="RESERVE_CLOSE">예약 마감</option>
+        <option value="SERVICE_END">서비스 종료</option>
+    </select><br>
 
     <label for="imageUrl">Image URL:</label>
     <input type="text" id="imageUrl" placeholder="http://example.com/image.jpg"><br>
@@ -83,7 +89,7 @@
     <label for="revokeStandDayName">Revoke Stand Day Name:</label>
     <input type="text" id="revokeStandDayName" placeholder="7일전"><br>
 
-    <button type="submit">Submit</button>
+
 </form>
 
 <script>
@@ -91,6 +97,10 @@
 
         var selectedDates1 = [];
         var selectedDates2 = [];
+
+        const urlParams = new URL(location.href).searchParams;
+        const id = urlParams.get('id');
+        getData(selectedDates1, selectedDates2, id);
 
         $('#rcptBeginDateTime').clockpicker({
             autoclose: true
@@ -183,29 +193,20 @@
 
 
         $('#loadData').click(function () {
-            var reservationId = $('#reservationId').val();
-            if (reservationId) {
-                $.ajax({
-                    url: '/reserve/reserve?id=' + reservationId,
-                    type: 'GET',
-                    success: function (response) {
-                        console.log(response);
-                        displayData(selectedDates1, selectedDates2, response);
-                    },
-                    error: function (error) {
-                        console.log('Error:', error);
-                        $('#reservationDetails').html('<p>An error has occurred</p>');
-                    }
-                });
-            } else {
-                alert('Please enter a reservation ID');
-            }
+            getData(selectedDates1, selectedDates2, $('#reservationId').val());
         });
 
+        /*
         $('#reservationForm').submit(function (event) {
             event.preventDefault();
             submitReservationForm();
         });
+
+         */
+
+        $('#reservationFormSubmit').click(function (){
+            submitReservationForm();
+        })
 
         // 현재날짜로 이동하는 현상을 방지 하는 코드
         /*
@@ -233,7 +234,23 @@
 
     });
 
+    function getData(selectedDates1, selectedDates2, id) {
+        $.ajax({
+            url: '/reserve/reserve?id=' + id,
+            type: 'GET',
+            success: function (response) {
+                console.log(response)
+                displayData(selectedDates1, selectedDates2, response);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#reservationDetails').html('<p>An error has occurred</p>');
+            }
+        });
+    }
+
     function displayData(selectedDates1, selectedDates2, data) {
+        $('#reservationId').val(data.id);
         $('#svcStateName').val(data.svcStateName);
         $('#imageUrl').val(data.imageUrl);
         $('#svcName').val(data.svcName);
@@ -243,7 +260,7 @@
 
         var rangeDates = getDatesInRange(data.rcptBeginDate, data.rcptEndDate);
 
-        $('#rcptDate').multiDatesPicker('resetDates','picked');
+        $('#rcptDate').multiDatesPicker('resetDates', 'picked');
         $('#rcptDate').multiDatesPicker('destroy');
         $('#rcptDate').multiDatesPicker({
             dateFormat: "yy-mm-dd",
@@ -292,7 +309,7 @@
 
         var rangeDates = getDatesInRange(data.svcOpenBeginDate, data.svcOpenEndDate);
 
-        $('#svcOpenDate').multiDatesPicker('resetDates','picked');
+        $('#svcOpenDate').multiDatesPicker('resetDates', 'picked');
         $('#svcOpenDate').multiDatesPicker('destroy');
         $('#svcOpenDate').multiDatesPicker({
             dateFormat: "yy-mm-dd",
@@ -388,6 +405,7 @@
             success: function (response) {
                 console.log('Success:', response);
                 alert(response);
+                location.href = "/reserve/update?id=" + $('#reservationId').val();
             },
             error: function (xhr, status, error) {
                 console.log('Error:', xhr.responseText);

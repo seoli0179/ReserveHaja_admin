@@ -14,7 +14,13 @@
 <body>
 <form id="reservationForm">
     <label for="svcStateName">서비스 상태:</label>
-    <input type="text" id="svcStateName" placeholder="Active/Inactive"><br>
+    <select id="svcStateName">
+        <option value="SERVICE_WAIT" selected>서비스 대기</option>
+        <option value="RESERVE_START">접수 중</option>
+        <option value="RESERVE_END">접수 종료</option>
+        <option value="RESERVE_CLOSE">예약 마감</option>
+        <option value="SERVICE_END">서비스 종료</option>
+    </select><br>
 
     <label for="imageUrl">이미지 경로:</label>
     <input type="text" id="imageUrl" placeholder="http://example.com/image.jpg"><br>

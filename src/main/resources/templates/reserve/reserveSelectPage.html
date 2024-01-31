@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Reservation Details</title>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Reservation Details</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <h1>Reservation Details</h1>
@@ -12,51 +12,61 @@
 <div id="reservationDetails"></div>
 
 <script>
-  $(document).ready(function() {
-    $('#loadData').click(function() {
-      var reservationId = $('#reservationId').val();
-      if (reservationId) {
-        $.ajax({
-          url: '/reserve/reserve?id=' + reservationId,
-          type: 'GET',
-          success: function(response) {
-            displayData(response);
-          },
-          error: function(error) {
-            console.log('Error:', error);
-            $('#reservationDetails').html('<p>An error has occurred</p>');
-          }
+
+    $(document).ready(function () {
+
+        const urlParams = new URL(location.href).searchParams;
+        const id = urlParams.get('id');
+        getData(id);
+
+        $('#loadData').click(function () {
+            var reservationId = $('#reservationId').val();
+            if (reservationId) {
+                getData(reservationId);
+            } else {
+                alert('Please enter a reservation ID');
+            }
         });
-      } else {
-        alert('Please enter a reservation ID');
-      }
     });
-  });
 
-  function displayData(data) {
-    var content = '<ul>';
-    content += '<li>ID: ' + data.id + '</li>';
-    content += '<li>Service ID: ' + data.svcId + '</li>';
-    content += '<li>Service State Name: ' + data.svcStateName + '</li>';
-    content += '<li>Image URL: ' + data.imageUrl + '</li>';
-    content += '<li>Service Name: ' + data.svcName + '</li>';
-    content += '<li>Place Name: ' + data.placeName + '</li>';
-    content += '<li>Area Name: ' + data.areaName + '</li>';
-    content += '<li>User Target Info: ' + data.userTargetInfo + '</li>';
-    content += '<li>Receipt Begin Date: ' + data.rcptBeginDate + '</li>';
-    content += '<li>Receipt End Date: ' + data.rcptEndDate + '</li>';
-    content += '<li>Service Open Begin Date: ' + data.svcOpenBeginDate + '</li>';
-    content += '<li>Service Open End Date: ' + data.svcOpenEndDate + '</li>';
-    content += '<li>Service Use Begin Time: ' + data.svcUseBeginTime + '</li>';
-    content += '<li>Service Use End Time: ' + data.svcUseEndTime + '</li>';
-    content += '<li>Place X Coordinate: ' + data.placeX + '</li>';
-    content += '<li>Place Y Coordinate: ' + data.placeY + '</li>';
-    content += '<li>Detail Info: ' + data.detailInfo + '</li>';
-    content += '<li>Revoke Stand Day Name: ' + data.revokeStandDayName + '</li>';
-    content += '</ul>';
+    function getData(id) {
+        $.ajax({
+            url: '/reserve/reserve?id=' + id,
+            type: 'GET',
+            success: function (response) {
+                displayData(response);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#reservationDetails').html('<p>An error has occurred</p>');
+            }
+        });
+    }
 
-    $('#reservationDetails').html(content);
-  }
+    function displayData(data) {
+        var content = '<ul>';
+        content += '<li>ID: ' + data.id + '</li>';
+        content += '<li>Service ID: ' + data.svcId + '</li>';
+        content += '<li>Service State Name: ' + data.svcStateName + '</li>';
+        content += '<li>Image URL: ' + data.imageUrl + '</li>';
+        content += '<li>Service Name: ' + data.svcName + '</li>';
+        content += '<li>Place Name: ' + data.placeName + '</li>';
+        content += '<li>Area Name: ' + data.areaName + '</li>';
+        content += '<li>User Target Info: ' + data.userTargetInfo + '</li>';
+        content += '<li>Receipt Begin Date: ' + data.rcptBeginDate + '</li>';
+        content += '<li>Receipt End Date: ' + data.rcptEndDate + '</li>';
+        content += '<li>Service Open Begin Date: ' + data.svcOpenBeginDate + '</li>';
+        content += '<li>Service Open End Date: ' + data.svcOpenEndDate + '</li>';
+        content += '<li>Service Use Begin Time: ' + data.svcUseBeginTime + '</li>';
+        content += '<li>Service Use End Time: ' + data.svcUseEndTime + '</li>';
+        content += '<li>Place X Coordinate: ' + data.placeX + '</li>';
+        content += '<li>Place Y Coordinate: ' + data.placeY + '</li>';
+        content += '<li>Detail Info: ' + data.detailInfo + '</li>';
+        content += '<li>Revoke Stand Day Name: ' + data.revokeStandDayName + '</li>';
+        content += '</ul>';
+
+        $('#reservationDetails').html(content);
+    }
 </script>
 </body>
 </html>
