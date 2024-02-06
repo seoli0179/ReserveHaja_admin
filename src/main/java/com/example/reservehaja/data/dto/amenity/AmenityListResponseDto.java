@@ -1,16 +1,14 @@
-package com.example.reservehaja.data.dto.reserve;
+package com.example.reservehaja.data.dto.amenity;
 
 import com.example.reservehaja.data.entity.Amenity;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
-public class ReserveListResponseDto {
+public class AmenityListResponseDto {
 
     private Long id;
     private String svcStateName; // 서비스 상태
@@ -21,7 +19,7 @@ public class ReserveListResponseDto {
     private String svcOpenBeginDate; // 서비스개시 시작일시
     private String svcOpenEndDate; // 서비스개시 종료일시
 
-    public ReserveListResponseDto fromEntity(Amenity amenity) {
+    public AmenityListResponseDto fromEntity(Amenity amenity) {
 
         DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amenity Details</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<h1>회차 정보</h1>
+<label for="roundId">회차 ID:</label>
+<input type="text" id="roundId">
+<button id="loadData">검색</button>
+<button id="deleteData">삭제</button>
+<div id="roundDetails"></div>
+
+<script>
+
+    $(document).ready(function () {
+
+        const urlParams = new URL(location.href).searchParams;
+        const amenityId = urlParams.get('id');
+        const roundId = urlParams.get('roundId');
+        getData(roundId, amenityId);
+
+        $('#loadData').click(function () {
+            var roundId = $('#roundId').val();
+            if (roundId) {
+                getData(roundId, amenityId);
+            } else {
+                alert('Please enter a amenity ID');
+            }
+        });
+
+        $('#deleteData').click(function () {
+            $.ajax({
+                url: '/round/round?id=' + $('#roundId').val(),
+                type: 'DELETE',
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (error) {
+                    console.log('Error:', error);
+                    $('#amenityDetails').html('<p>An error has occurred</p>');
+                }
+            });
+        });
+
+    });
+
+    function getData(roundId, amenityId) {
+        $.ajax({
+            url: '/round/round?id=' + roundId + '&amenityId=' + amenityId,
+            type: 'GET',
+            success: function (response) {
+                displayData(response);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#amenityDetails').html('<p>An error has occurred</p>');
+            }
+        });
+    }
+
+    function displayData(data) {
+        var content = '<ul>';
+        content += '<li>회차 ID: ' + data.id + '</li>';
+        content += '<li>회차 명: ' + data.roundName + '</li>';
+        content += '<li>시간: ' + data.roundUseBeginTime + ' ~ ' + data.roundUseEndTime + '</li>';
+        content += '<li>시설 이름: ' + data.amenity.svcName + '</li>';
+        content += '<li>서비스 기간: ' + data.amenity.svcOpenBeginDate + ' ~ ' + data.amenity.svcOpenEndDate + '</li>';
+        content += '</ul>';
+
+        $('#roundDetails').html(content);
+    }
+</script>
+</body>
+</html>

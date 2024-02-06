@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>예약 리스트</title>
+    <title>회차셀 리스트</title>
     <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
@@ -26,14 +26,17 @@
 </head>
 <body>
 <h1>회차 이름</h1>
-<h2>예약 리스트</h2>
+<h2>회차셀 리스트</h2>
 <table>
     <thead>
     <tr>
         <th>ID</th>
-        <th>예약 상태</th>
-        <th>유저 이름</th>
-        <th>예약 신청 날짜</th>
+        <th>회차셀명</th>
+        <th>회차셀 상태</th>
+        <th>회차 기간</th>
+        <th>심사중</th>
+        <th>예약 취소</th>
+        <th>예약 관리</th>
     </tr>
     </thead>
     <tbody id="roundCellList">
@@ -43,18 +46,16 @@
 
 <script>
     const urlParams = new URL(location.href).searchParams;
-    const roundCellId = urlParams.get('roundcellid');
+    const roundId = urlParams.get('roundId');
 
     $(document).ready(function () {
 
-        console.log(roundCellId);
-
         $.ajax({
-            url: '/reserve/reservelist?roundcellid=' + roundCellId,
+            url: '/roundcell/roundcelllist?roundId=' + roundId,
             type: 'GET',
             success: function (response) {
                 console.log(response)
-                loadReserveList(response, roundCellId);
+                loadRoundCellList(response, roundId);
             },
             error: function (error) {
                 console.log('Error:', error);
@@ -64,67 +65,75 @@
 
     });
 
-    function loadReserveList(reserveList, roundCellId) {
+    function loadRoundCellList(roundCellList, roundId) {
         const tbody = document.getElementById("roundCellList");
-        for (let i = 0; i < reserveList.length; i++) {
+        for (let i = 0; i < roundCellList.length; i++) {
 
-            const item = reserveList[i];
+            const item = roundCellList[i];
             const row = tbody.insertRow();
 
             //const roundCellDates = item.roundCellList.map(items => items.roundCellDate);
 
             const cell1 = row.insertCell();
             const a = document.createElement("a");
-            a.href = "/reserve/read?reserveid=" + item.reserveId;
-            a.text = item.reserveId;
+            a.href = "/roundcell/read?roundcellid=" + item.roundCellId;
+            a.text = item.roundCellId;
             cell1.appendChild(a);
 
             const cell2 = row.insertCell();
+            cell2.textContent = item.roundName;
+
+            const cell3 = row.insertCell();
             //cell3.textContent = item.roundCellState;
 
             var selectElement = document.createElement("select");
-            selectElement.id = "reserveStateSelect" + item.reserveId;
+            selectElement.id = "roundCellStateSelect" + item.roundCellId;
 
             // option 요소 생성 및 추가
             var option1 = document.createElement("option");
-            option1.value = "RESERVE_JUDGE";
-            option1.text = "심사중";
+            option1.value = "SERVICE_WAIT";
+            option1.text = "서비스대기";
             selectElement.appendChild(option1);
 
             var option2 = document.createElement("option");
-            option2.value = "RESERVE_COMPLETE";
-            option2.text = "예약완료";
+            option2.value = "RESERVE_START";
+            option2.text = "접수중";
             selectElement.appendChild(option2);
 
             var option3 = document.createElement("option");
-            option3.value = "RESERVE_CANCEL";
-            option3.text = "예약취소";
+            option3.value = "RESERVE_END";
+            option3.text = "접수종료";
             selectElement.appendChild(option3);
 
             var option4 = document.createElement("option");
-            option4.value = "RESERVE_FAIL";
-            option4.text = "심사탈락";
+            option4.value = "RESERVE_COMPLETE";
+            option4.text = "예약완료";
             selectElement.appendChild(option4);
 
-            cell2.appendChild(selectElement);
+            var option5 = document.createElement("option");
+            option5.value = "SERVICE_END";
+            option5.text = "서비스종료";
+            selectElement.appendChild(option5);
 
-            var reserveStateUpdateButton = document.createElement("button");
-            reserveStateUpdateButton.id = "reserveStateUpdateButton" + item.reserveId;
-            reserveStateUpdateButton.textContent = "수정";
-            cell2.append(reserveStateUpdateButton);
+            cell3.appendChild(selectElement);
+
+            var roundCellStateUpdateButton = document.createElement("button");
+            roundCellStateUpdateButton.id = "roundCellStateUpdateButton" + item.roundCellId;
+            roundCellStateUpdateButton.textContent = "수정";
+            cell3.append(roundCellStateUpdateButton);
 
 
-            $('#reserveStateUpdateButton' + item.reserveId).click(function () {
+            $('#roundCellStateUpdateButton' + item.roundCellId).click(function () {
 
                 var data = {
-                    reserveId: item.reserveId,
-                    reserveState: $('#reserveStateSelect' + item.reserveId).val()
+                    roundCellId: item.roundCellId,
+                    roundCellState: $('#roundCellStateSelect' + item.roundCellId).val()
                 }
 
                 console.log(data);
 
                 $.ajax({
-                    url: '/reserve/reserve/state',
+                    url: '/roundcell/roundcell/state',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     type: 'PUT',
@@ -139,15 +148,27 @@
                 });
             });
 
-            $('#reserveStateSelect' + item.reserveId).val(item.reserveState);
-
-            const cell3 = row.insertCell();
-            cell3.textContent = item.username;
+            $('#roundCellStateSelect' + item.roundCellId).val(item.roundCellState);
 
 
             const cell4 = row.insertCell();
-            cell4.textContent = item.reserveStartDate;
+            cell4.textContent = item.roundCellDate;
 
+            const cell5 = row.insertCell();
+            cell5.textContent = item.judge;
+
+            const cell6 = row.insertCell();
+            cell6.textContent = item.cancel;
+
+            const cell7 = row.insertCell();
+            var reserveListButton = document.createElement("button");
+            reserveListButton.id = "reserveListButton" + item.roundCellId;
+            reserveListButton.textContent = "예약 관리";
+            cell7.append(reserveListButton);
+
+            $('#reserveListButton' + item.roundCellId).click(function () {
+                location.href = "/reserve/list?roundcellid=" + item.roundCellId;
+            });
 
 
         }

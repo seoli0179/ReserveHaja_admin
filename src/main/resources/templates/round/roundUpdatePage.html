@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>시설 생성</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!--<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+    <script src="/js/jquery-ui.js"></script>
+    <script src="/js/jquery-ui.multidatespicker.js"></script>
+    <script src="/js/jquery-clockpicker.min.js"></script>
+    <link rel="stylesheet" href="/css/jquery-clockpicker.min.css">
+</head>
+<body>
+<form id="roundForm">
+
+    <label for="roundId">회차 ID:</label>
+    <input type="number" id="roundId" placeholder="100">
+    <button id="loadButton">검색</button>
+    <br>
+
+    <label for="roundName">회차 이름:</label>
+    <input type="text" id="roundName" placeholder="09:00~12:00 오전A"><br>
+
+    <label for="roundDates">회차 기간:</label>
+    <div id="roundDates" autocomplete="off"></div>
+    <br>
+
+    <label for="roundUseBeginTime">회차 시간</label>
+    <input id="roundUseBeginTime" autocomplete="off" value="" data-default="00:00">~
+    <input id="roundUseEndTime" autocomplete="off" value="" data-default="00:00"><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        const urlParams = new URL(location.href).searchParams;
+        const amenityId = urlParams.get('amenityId');
+        const roundId = urlParams.get('roundId');
+        getData(roundId, amenityId);
+
+
+        $('#roundUseBeginTime').clockpicker({
+            autoclose: true
+        });
+        $('#roundUseEndTime').clockpicker({
+            autoclose: true
+        });
+
+
+        $('#roundDates').multiDatesPicker({
+            dateFormat: "yy-mm-dd",
+            numberOfMonths: [1, 2],
+        });
+
+        $('#roundForm').submit(function (event) {
+            event.preventDefault();
+            submitRoundForm(amenityId);
+        });
+    });
+
+    function submitRoundForm(amenityId) {
+
+        var roundDates = $('#roundDates').multiDatesPicker('getDates');
+
+        var formData = {
+            amenityId: amenityId,
+            roundId: $('#roundId').val(),
+            roundName: $('#roundName').val(),
+            roundDates: roundDates,
+            roundUseBeginTime: $('#roundUseBeginTime').val(),
+            roundUseEndTime: $('#roundUseEndTime').val()
+        };
+
+        console.log(formData);
+
+        $.ajax({
+            url: '/round/round',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                console.log('Success:', response);
+                alert(response);
+                getData($('#roundId').val(), amenityId);
+                //location.href = "/round/list?id=" + id;
+            },
+            error: function (xhr, status, error) {
+                console.log('Error:', xhr.responseText);
+                alert('Error submitting reservation.');
+            }
+        });
+
+    }
+
+    function getData(roundId, amenityId) {
+        $.ajax({
+            url: '/round/round?id=' + roundId + '&amenityId=' + amenityId,
+            type: 'GET',
+            success: function (response) {
+                console.log(response);
+                displayData(response);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#amenityDetails').html('<p>An error has occurred</p>');
+            }
+        });
+    }
+
+    function displayData(data) {
+
+        const roundCellDates = data.roundCellList.map(items => items.roundCellDate);
+
+        $('#roundId').val(data.id);
+        $('#roundName').val(data.roundName);
+        $('#roundDates').multiDatesPicker({
+            dateFormat: "yy-mm-dd",
+            numberOfMonths: [1, 2],
+            defaultDate: roundCellDates[0],
+            addDates: roundCellDates
+        });
+        $('#roundUseBeginTime').val(data.roundUseBeginTime);
+        $('#roundUseEndTime').val(data.roundUseEndTime);
+    }
+
+</script>
+</body>
+</html>

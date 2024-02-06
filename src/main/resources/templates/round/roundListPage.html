@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>회차 리스트</title>
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
+    <script src="/js/jquery-ui.js"></script>
+    <script src="/js/jquery-ui.multidatespicker.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        img {
+            width: 100px; /* 이미지 크기 조정 */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>시설 이름</h1>
+<h2>회차 리스트</h2>
+<button id="roundCreate">추가</button>
+<button id="roundRead">검색</button>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>회차명</th>
+        <th>시간</th>
+        <th>기간</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody id="roundList">
+    <!-- 여기에 예약 목록이 동적으로 삽입됩니다. -->
+    </tbody>
+</table>
+
+<script>
+    const urlParams = new URL(location.href).searchParams;
+    const id = urlParams.get('id');
+
+    $("#roundCreate").click(function () {
+        location.href = "/round/create?id=" + id;
+    });
+
+    $("#roundRead").click(function () {
+        location.href = "/round/read?id=" + id;
+    });
+
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '/round/roundList?id=' + id,
+            type: 'GET',
+            success: function (response) {
+                console.log(response)
+                loadRoundList(response, id);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#amenityDetails').html('<p>An error has occurred</p>');
+            }
+        });
+
+    });
+
+    function loadRoundList(roundList, amenityId) {
+        const tbody = document.getElementById("roundList");
+        for (let i = 0; i < roundList.length; i++) {
+
+            const item = roundList[i];
+            const row = tbody.insertRow();
+
+            const roundCellDates = item.roundCellList.map(items => items.roundCellDate);
+
+            const cell1 = row.insertCell();
+            const a = document.createElement("a");
+            a.href = "/round/read?id=" + amenityId + "&roundId=" + item.id;
+            a.text = item.id;
+            cell1.appendChild(a);
+
+            const cell2 = row.insertCell();
+            cell2.textContent = item.roundName;
+
+            const cell3 = row.insertCell();
+            cell3.textContent = item.roundUseBeginTime + " ~ " + item.roundUseEndTime;
+
+            const cell4 = row.insertCell();
+            cell4.textContent = roundCellDates[0] + " ~ " + roundCellDates[roundCellDates.length - 1];
+
+            const cell5 = row.insertCell();
+            const input = document.createElement("div");
+            input.id = 'roundcelldate' + item.id;
+            // input.style.display = "none";
+
+
+            console.log(roundCellDates);
+            const divName = 'roundcelldate' + item.id;
+            // const toggleButton = document.createElement("button");
+            // toggleButton.textContent = "기간 보기";
+            // toggleButton.id = 'toggleButton' + item.id;
+            cell5.appendChild(input);
+            // cell4.appendChild(toggleButton);
+
+            $('#' + divName).multiDatesPicker({
+                dateFormat: "yy-mm-dd",
+                numberOfMonths: [1, 2],
+                defaultDate: roundCellDates[0],
+                addDates: roundCellDates
+            });
+            /*
+                        $('#' + 'toggleButton' + item.id).click(function () {
+                            console.log("a");
+                            var input = document.getElementById(divName);
+
+                            // 입력창의 현재 display 상태를 확인하고, 상태에 따라 보이거나 숨김 처리
+                            if (input.style.display === 'none') {
+                                input.style.display = 'block'; // 입력창을 보여줌
+                            } else {
+                                input.style.display = 'none'; // 입력창을 숨김
+                            }
+                        });
+
+            */
+
+            const cell6 = row.insertCell();
+            const roundCellButton = document.createElement("button");
+            roundCellButton.textContent = "회차셀 관리";
+            roundCellButton.id = "roundCellButton" + item.id;
+            cell6.append(roundCellButton);
+
+            $("#roundCellButton" + item.id).click(function () {
+                location.href = "/roundcell/list?roundId=" + item.id;
+            });
+
+            const cell7 = row.insertCell();
+            const updateButton = document.createElement("button");
+            updateButton.textContent = "회차 수정";
+            updateButton.id = "updateButton" + item.id;
+            cell7.append(updateButton);
+
+            $("#updateButton" + item.id).click(function () {
+                location.href = "/round/update?amenityId=" + id + "&roundId=" + item.id;
+            });
+
+            const cell8 = row.insertCell();
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "회차 삭제";
+            deleteButton.id = "deleteButton" + item.id;
+            cell8.append(deleteButton);
+
+            $("#deleteButton" + item.id).click(function () {
+
+                $.ajax({
+                    url: '/round/round?id=' + item.id,
+                    type: 'DELETE',
+                    success: function (response) {
+                        alert(response);
+                        location.reload(true);
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+
+        }
+    }
+
+</script>
+</body>
+</html>

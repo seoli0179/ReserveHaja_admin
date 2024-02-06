@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>시설 생성</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
+    <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!--<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
+    <script src="/js/jquery-ui.js"></script>
+    <script src="/js/jquery-ui.multidatespicker.js"></script>
+    <script src="/js/jquery-clockpicker.min.js"></script>
+    <link rel="stylesheet" href="/css/jquery-clockpicker.min.css">
+</head>
+<body>
+<form id="roundForm">
+
+    <label for="roundName">회차 이름:</label>
+    <input type="text" id="roundName" placeholder="09:00~12:00 오전A"><br>
+
+    <label for="roundDates">회차 기간:</label>
+    <div id="roundDates" autocomplete="off"></div><br>
+
+    <label for="roundUseBeginTime">회차 시간</label>
+    <input id="roundUseBeginTime" autocomplete="off" value="" data-default="00:00">~
+    <input id="roundUseEndTime" autocomplete="off" value="" data-default="00:00"><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    $(document).ready(function () {
+
+        const urlParams = new URL(location.href).searchParams;
+        const id = urlParams.get('id');
+
+        $('#roundUseBeginTime').clockpicker({
+            autoclose: true
+        });
+        $('#roundUseEndTime').clockpicker({
+            autoclose: true
+        });
+
+
+        $('#roundDates').multiDatesPicker({
+            dateFormat: "yy-mm-dd",
+            numberOfMonths: [1, 2],
+        });
+
+        $('#roundForm').submit(function (event) {
+            event.preventDefault();
+            submitRoundForm(id);
+        });
+    });
+
+    function submitRoundForm(id) {
+
+        var roundDates = $('#roundDates').multiDatesPicker('getDates');
+
+        var roundUseBeginTime = $('#roundUseBeginTime').val();
+        var roundUseEndTime = $('#roundUseEndTime').val();
+
+        var formData = {
+            amenityId: id,
+            roundName: $('#roundName').val(),
+            roundDates: roundDates,
+            roundUseBeginTime: roundUseBeginTime,
+            roundUseEndTime: roundUseEndTime
+        };
+
+        console.log(formData);
+
+        $.ajax({
+            url: '/round/round',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                console.log('Success:', response);
+                alert(response);
+                location.href = "/round/list?id=" + id;
+            },
+            error: function (xhr, status, error) {
+                console.log('Error:', xhr.responseText);
+                alert('Error submitting reservation.');
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

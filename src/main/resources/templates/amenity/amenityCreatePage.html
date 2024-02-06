@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reservation Form</title>
+    <title>시설 생성</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
     <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/css/jquery-clockpicker.min.css">
 </head>
 <body>
-<form id="reservationForm">
+<form id="amenityForm">
     <label for="svcStateName">서비스 상태:</label>
     <select id="svcStateName">
         <option value="SERVICE_WAIT" selected>서비스 대기</option>
@@ -52,23 +52,10 @@
     -->
     <label for="svcOpenDate">서비스 오픈기간:</label>
     <input id="svcOpenDate"><br>
+
     <label for="svcOpenBeginTime">서비스 오픈시간:</label>
     <input id="svcOpenBeginTime" value="" data-default="00:00">~
     <input id="svcOpenEndTime" value="" data-default="23:59"><br>
-    <!--
-    <label for="svcOpenBeginDate">Service Open Begin Date:</label>
-    <input type="text" id="svcOpenBeginDate" placeholder="2024-01-01 08:00:00.0"><br>
-
-    <label for="svcOpenEndDate">Service Open End Date:</label>
-    <input type="text" id="svcOpenEndDate" placeholder="2024-01-01 08:00:00.0"><br>
-    -->
-    <!--
-    <label for="svcUseBeginTime">Service Use Begin Time:</label>
-    <input type="text" id="svcUseBeginTime" placeholder="09:00"><br>
-
-    <label for="svcUseEndTime">Service Use End Time:</label>
-    <input type="text" id="svcUseEndTime" placeholder="17:00"><br>
-    -->
 
     <label for="svcUseBeginTime">서비스 이용시간:</label>
     <input id="svcUseBeginTime" value="" data-default="09:00">~
@@ -182,13 +169,13 @@
             }
         });
 
-        $('#reservationForm').submit(function (event) {
+        $('#amenityForm').submit(function (event) {
             event.preventDefault();
-            submitReservationForm();
+            submitAmenityForm();
         });
     });
 
-    function submitReservationForm() {
+    function submitAmenityForm() {
 
         var rcptDate = $('#rcptDate').multiDatesPicker('getDates');
         var svcOpenDate = $('#svcOpenDate').multiDatesPicker('getDates');
@@ -220,14 +207,14 @@
         console.log(formData);
 
         $.ajax({
-            url: '/reserve/reserve',
+            url: '/amenity/amenity',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
                 console.log('Success:', response);
                 alert(response);
-                location.href = "/reserve";
+                location.href = "/amenity";
             },
             error: function (xhr, status, error) {
                 console.log('Error:', xhr.responseText);

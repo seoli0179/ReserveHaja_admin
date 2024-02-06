@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reservation Form</title>
+    <title>Amenity Form</title>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/css/jquery-ui.multidatespicker.css">
     <script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -13,12 +13,12 @@
 </head>
 <body>
 
-<label for="reservationId">Reservation ID:</label>
-<input type="text" id="reservationId">
-<button id="loadData">조회</button> <button id="reservationFormSubmit" type="submit">수정</button>
+<label for="amenityId">Amenity ID:</label>
+<input type="text" id="amenityId">
+<button id="loadData">조회</button> <button id="amenityFormSubmit" type="submit">수정</button>
 
 
-<form id="reservationForm">
+<form id="amenityForm">
     <label for="svcStateName">Service State Name:</label>
     <select id="svcStateName">
         <option value="SERVICE_WAIT">서비스 대기</option>
@@ -193,7 +193,7 @@
 
 
         $('#loadData').click(function () {
-            getData(selectedDates1, selectedDates2, $('#reservationId').val());
+            getData(selectedDates1, selectedDates2, $('#amenityId').val());
         });
 
         /*
@@ -204,8 +204,8 @@
 
          */
 
-        $('#reservationFormSubmit').click(function (){
-            submitReservationForm();
+        $('#amenityFormSubmit').click(function (){
+            submitAmenityForm();
         })
 
         // 현재날짜로 이동하는 현상을 방지 하는 코드
@@ -236,21 +236,26 @@
 
     function getData(selectedDates1, selectedDates2, id) {
         $.ajax({
-            url: '/reserve/reserve?id=' + id,
+            url: '/amenity/amenity?id=' + id,
             type: 'GET',
             success: function (response) {
                 console.log(response)
-                displayData(selectedDates1, selectedDates2, response);
+                if(response === "" || response === null){
+                    alert("조회 실패");
+                }else {
+                    displayData(selectedDates1, selectedDates2, response);
+                }
+
             },
             error: function (error) {
                 console.log('Error:', error);
-                $('#reservationDetails').html('<p>An error has occurred</p>');
+                $('#amenityDetails').html('<p>An error has occurred</p>');
             }
         });
     }
 
     function displayData(selectedDates1, selectedDates2, data) {
-        $('#reservationId').val(data.id);
+        $('#amenityId').val(data.id);
         $('#svcStateName').val(data.svcStateName);
         $('#imageUrl').val(data.imageUrl);
         $('#svcName').val(data.svcName);
@@ -365,7 +370,7 @@
         $('#revokeStandDayName').val(data.revokeStandDayName);
     }
 
-    function submitReservationForm() {
+    function submitAmenityForm() {
 
         var rcptDate = $('#rcptDate').multiDatesPicker('getDates');
         var svcOpenDate = $('#svcOpenDate').multiDatesPicker('getDates');
@@ -376,7 +381,7 @@
         var svcOpenEndDate = svcOpenDate[svcOpenDate.length - 1] + " " + $('#svcOpenEndTime').val() + ":00.0";
 
         var formData = {
-            id: $('#reservationId').val(),
+            id: $('#amenityId').val(),
             svcStateName: $('#svcStateName').val(),
             imageUrl: $('#imageUrl').val(),
             svcName: $('#svcName').val(),
@@ -398,18 +403,18 @@
         console.log(formData);
 
         $.ajax({
-            url: '/reserve/reserve',
+            url: '/amenity/amenity',
             type: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
                 console.log('Success:', response);
                 alert(response);
-                location.href = "/reserve/update?id=" + $('#reservationId').val();
+                location.href = "/amenity/update?id=" + $('#amenityId').val();
             },
             error: function (xhr, status, error) {
                 console.log('Error:', xhr.responseText);
-                alert('Error submitting reservation.');
+                alert('Error submitting amenity.');
             }
         });
     }

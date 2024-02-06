@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reserve JSON Array Submission</title>
+    <title>ㅁmenity JSON Array Submission</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
-<h2>Reservation JSON Array Submission</h2>
+<h2>ㅁmenity JSON Array Submission</h2>
 
 <form id="jsonArrayForm">
     <label for="jsonData">JSON Data:</label>
@@ -27,7 +27,7 @@
         try {
             var parsedData = JSON.parse(jsonData);
             $.ajax({
-                url: '/reserve/jsonArray',
+                url: '/amenity/jsonArray',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(parsedData),

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>시설 리스트</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        img {
+            width: 100px; /* 이미지 크기 조정 */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>시설 리스트</h1>
+<button id="amenityCreate" onclick="location.href='/amenity/create'">시설 추가</button>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>서비스 상태</th>
+        <th>이미지</th>
+        <th>서비스 명</th>
+        <th>장소명</th>
+        <th>지역명</th>
+        <th>서비스 시작일시</th>
+        <th>서비스 종료일시</th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody id="amenityList">
+    <!-- 여기에 예약 목록이 동적으로 삽입됩니다. -->
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function () {
+
+        $.ajax({
+            url: '/amenity/amenityList',
+            type: 'GET',
+            success: function (response) {
+                console.log(response)
+                loadReserveList(response);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#amenityDetails').html('<p>An error has occurred</p>');
+            }
+        });
+
+    });
+
+    function loadReserveList(amenityList) {
+        const tbody = document.getElementById("amenityList");
+        amenityList.forEach(item => {
+            const row = tbody.insertRow();
+            const values = Object.values(item); // 객체의 모든 값을 배열로 변환
+            values.forEach((value, index) => {
+                const cell = row.insertCell();
+                if (index === 0) { // 첫 번째 값 처리: 링크 추가
+                    const a = document.createElement("a");
+                    a.href = "/amenity/select?id=" + value;
+                    a.text = value;
+                    cell.appendChild(a);
+                } else if (index === 2) { // 특정 인덱스(예: 2)에서 이미지 처리
+                    const img = document.createElement("img");
+                    img.src = value;
+                    cell.appendChild(img);
+                } else {
+                    cell.textContent = value;
+                }
+
+                // 마지막 열에 도달했을 때 버튼 추가
+                if (index === values.length - 1) {
+
+                    const cell = row.insertCell();
+                    const roundButton = document.createElement("button");
+                    roundButton.textContent = "회차 관리";
+                    roundButton.addEventListener('click', function () {
+                        location.href = "/round/list?id=" + item.id;
+                    });
+                    cell.appendChild(roundButton);
+
+                    const cell1 = row.insertCell();
+                    const updateButton = document.createElement("button");
+                    updateButton.textContent = "시설 수정";
+                    updateButton.addEventListener('click', function () {
+                        location.href = "/amenity/update?id=" + item.id;
+                    });
+                    cell1.appendChild(updateButton);
+
+                    const cell2 = row.insertCell();
+                    const deleteButton = document.createElement("button");
+                    deleteButton.textContent = "시설 삭제";
+                    deleteButton.addEventListener('click', function () {
+                        deleteAmenity(item.id); // `id` 속성으로 접근, item[0]이 id일 경우
+                    });
+                    cell2.appendChild(deleteButton);
+                }
+            });
+        });
+    }
+
+    function deleteAmenity(id) {
+
+        $.ajax({
+            url: '/amenity/amenity?id=' + id,
+            type: 'DELETE',
+            success: function (response) {
+                alert(response);
+                location.reload(true);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+                $('#amenityDetails').html('<p>An error has occurred</p>');
+            }
+        });
+
+    }
+</script>
+</body>
+</html>

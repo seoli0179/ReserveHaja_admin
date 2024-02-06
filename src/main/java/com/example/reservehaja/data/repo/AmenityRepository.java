@@ -13,4 +13,6 @@ public interface AmenityRepository extends JpaRepository<Amenity,Long> {
 
     void deleteAmenityByIdAndAdmin_AdminId(Long id, String adminId);
 
+    //boolean existsAmenityByIdAndAdmin_AdminId(Long id, String adminId);
+
 }

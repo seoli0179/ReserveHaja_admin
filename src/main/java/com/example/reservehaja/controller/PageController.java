@@ -31,40 +31,74 @@ public class PageController {
         return "/admin/admin";
     }
 
-    @GetMapping("/reserve")
-    public String reserveIndexPage() {
-        return "/reserve/index";
+    @GetMapping("/amenity")
+    public String amenityIndexPage() {
+        return "/amenity/index";
     }
 
-    @GetMapping("/reserve/create")
-    public String reserveCreatePage() {
-        return "/reserve/reserveCreatePage";
+    @GetMapping("/amenity/list")
+    public String amenityListPage() {
+        return "/amenity/amenityListPage";
+    }
+
+    @GetMapping("/amenity/create")
+    public String amenityCreatePage() {
+        return "/amenity/amenityCreatePage";
+    }
+
+    @GetMapping("/amenity/select")
+    public String amenityReadPage() {
+        return "/amenity/amenitySelectPage";
+    }
+
+    @GetMapping("/amenity/update")
+    public String amenityUpdatePage() {
+        return "/amenity/amenityUpdatePage";
+    }
+
+    @GetMapping("/amenity/delete")
+    public String amenityDeletePage() {
+        return "/amenity/amenityDeletePage";
+    }
+
+    @GetMapping("/amenity/json")
+    public String amenityJsonPage() {
+        return "/amenity/amenityJsonPage";
+    }
+
+    @GetMapping("/round/list")
+    public String roundCListPage() {
+        return "/round/roundListPage";
+    }
+
+    @GetMapping("/round/create")
+    public String roundCreatePage() {
+        return "/round/roundCreatePage";
+    }
+
+    @GetMapping("/round/read")
+    public String roundReadPage() {
+        return "/round/roundReadPage";
+    }
+
+    @GetMapping("/round/update")
+    public String roundUpdatePage() {
+        return "/round/roundUpdatePage";
+    }
+
+    @GetMapping("/round/delete")
+    public String roundDeletePage() {
+        return "/round/roundDeletePage";
+    }
+
+    @GetMapping("/roundcell/list")
+    public String roundCellListPage() {
+        return "/roundCell/roundCellListPage";
     }
 
     @GetMapping("/reserve/list")
     public String reserveListPage() {
         return "/reserve/reserveListPage";
-    }
-
-
-    @GetMapping("/reserve/select")
-    public String reserveSelectPage() {
-        return "/reserve/reserveSelectPage";
-    }
-
-    @GetMapping("/reserve/update")
-    public String reserveUpdatePage() {
-        return "/reserve/reserveUpdatePage";
-    }
-
-    @GetMapping("/reserve/delete")
-    public String reserveDeletePage() {
-        return "/reserve/reserveDeletePage";
-    }
-
-    @GetMapping("/reserve/json")
-    public String reserveJsonPage() {
-        return "/reserve/reserveJsonPage";
     }
 
 }

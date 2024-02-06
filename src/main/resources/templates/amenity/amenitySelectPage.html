@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reservation Details</title>
+    <title>Amenity Details</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-<h1>Reservation Details</h1>
-<label for="reservationId">Reservation ID:</label>
-<input type="text" id="reservationId">
-<button id="loadData">Load Reservation Data</button>
-<div id="reservationDetails"></div>
+<h1>Amenity Details</h1>
+<label for="amenityId">Amenity ID:</label>
+<input type="text" id="amenityId">
+<button id="loadData">검색</button>
+<div id="amenityDetails"></div>
 
 <script>
 
@@ -20,25 +20,25 @@
         getData(id);
 
         $('#loadData').click(function () {
-            var reservationId = $('#reservationId').val();
-            if (reservationId) {
-                getData(reservationId);
+            var amenityId = $('#amenityId').val();
+            if (amenityId) {
+                getData(amenityId);
             } else {
-                alert('Please enter a reservation ID');
+                alert('Please enter a amenity ID');
             }
         });
     });
 
     function getData(id) {
         $.ajax({
-            url: '/reserve/reserve?id=' + id,
+            url: '/amenity/amenity?id=' + id,
             type: 'GET',
             success: function (response) {
                 displayData(response);
             },
             error: function (error) {
                 console.log('Error:', error);
-                $('#reservationDetails').html('<p>An error has occurred</p>');
+                $('#amenityDetails').html('<p>An error has occurred</p>');
             }
         });
     }
@@ -65,7 +65,7 @@
         content += '<li>Revoke Stand Day Name: ' + data.revokeStandDayName + '</li>';
         content += '</ul>';
 
-        $('#reservationDetails').html(content);
+        $('#amenityDetails').html(content);
     }
 </script>
 </body>

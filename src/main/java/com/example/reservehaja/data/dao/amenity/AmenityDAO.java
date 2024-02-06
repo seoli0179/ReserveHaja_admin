@@ -1,6 +1,6 @@
 package com.example.reservehaja.data.dao.amenity;
 
-import com.example.reservehaja.data.dto.reserve.ReserveUpdateRequestDto;
+import com.example.reservehaja.data.dto.amenity.AmenityUpdateRequestDto;
 import com.example.reservehaja.data.entity.Amenity;
 import com.example.reservehaja.data.repo.AmenityRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class AmenityDAO {
         return amenityRepository.findByAdmin_AdminId(adminId);
     }
 
-    public boolean updateAmenity(ReserveUpdateRequestDto dto) {
+    public boolean updateAmenity(AmenityUpdateRequestDto dto) {
 
         try {
 
