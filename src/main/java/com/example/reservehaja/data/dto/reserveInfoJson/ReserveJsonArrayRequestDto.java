@@ -57,6 +57,7 @@ public class ReserveJsonArrayRequestDto {
         amenity.setPlaceY(row.get(index).getY());  // 장소Y좌표
         amenity.setDetailInfo(row.get(index).getDTLCONT());  // 상세정보
         amenity.setRevokeStandDayName(row.get(index).getREVSTDDAYNM());
+        amenity.setCategory(row.get(index).getMINCLASSNM());
 
         return amenity;
 

@@ -40,7 +40,7 @@ public class RoundController {
                 if (roundService.addRound(dto.getAmenityId(), username, round)) {
                     for (int i = 0; i < dto.getRoundDates().size(); i++) {
                         RoundCell roundCell = new RoundCell();
-                        roundCell.setRoundCellState(RoundCellState.SERVICE_WAIT);
+                        roundCell.setRoundCellState(RoundCellState.RESERVE_START);
                         roundCell.setRoundCellDate(dto.getRoundDates().get(i));
                         roundCell.setRound(round);
                         roundCellService.addRoundCell(roundCell);

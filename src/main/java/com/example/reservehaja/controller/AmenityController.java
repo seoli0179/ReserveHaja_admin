@@ -26,8 +26,8 @@ public class AmenityController {
     public int amenityJsonArray(@RequestBody ReserveJsonArrayRequestDto dto) {
 
         System.out.println(dto.getRESULT().getCODE());
-
         return amenityService.addAmenityJsonArray(dto);
+
     }
 
     @PostMapping("amenity")
