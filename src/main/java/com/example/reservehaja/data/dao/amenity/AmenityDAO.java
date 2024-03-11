@@ -16,6 +16,8 @@ public class AmenityDAO {
 
     private final AmenityRepository amenityRepository;
 
+
+
     public boolean addAmenity(Amenity amenity) {
         if (isEmptyAmenitySvcId(amenity.getSvcId())) {
             amenityRepository.save(amenity);
@@ -23,6 +25,7 @@ public class AmenityDAO {
         }
         return false;
     }
+
 
     public Optional<Amenity> selectAmenity(Long id) {
         return amenityRepository.findById(id);

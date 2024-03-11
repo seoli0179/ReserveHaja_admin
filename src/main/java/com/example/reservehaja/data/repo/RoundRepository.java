@@ -15,4 +15,6 @@ public interface RoundRepository extends JpaRepository<Round, Long> {
 
     List<Round> findByAmenity_IdAndAmenity_Admin_AdminId(Long id, String adminId);
 
+    void deleteByAmenity_Id(Long amenityId);
+
 }

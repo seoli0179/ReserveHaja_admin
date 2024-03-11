@@ -24,6 +24,9 @@
 
     function submitJsonArray() {
         var jsonData = $('#jsonData').val();
+        jsonData = jsonData.replace(/^{"ListPublicReservationInstitution":|}$/g, '');
+        console.log(jsonData);
+
         try {
             var parsedData = JSON.parse(jsonData);
             $.ajax({
@@ -43,6 +46,8 @@
         } catch(e) {
             alert('Invalid JSON format');
         }
+
+
     }
 </script>
 

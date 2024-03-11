@@ -95,6 +95,11 @@ public class RoundService {
     }
 
     @Transactional
+    public void deleteRoundList(Long amenityId) {
+        roundRepository.deleteByAmenity_Id(amenityId);
+    }
+
+    @Transactional
     public boolean updateRound(RoundUpdatedRequestDto dto, String username) {
 
         try {

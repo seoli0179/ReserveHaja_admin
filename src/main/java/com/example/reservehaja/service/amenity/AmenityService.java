@@ -14,6 +14,7 @@ import com.example.reservehaja.data.entity.RoundCell;
 import com.example.reservehaja.data.repo.AdminRepository;
 import com.example.reservehaja.data.repo.AmenityRepository;
 import com.example.reservehaja.data.state.RoundCellState;
+import com.example.reservehaja.data.state.ServiceState;
 import com.example.reservehaja.service.round.RoundService;
 import com.example.reservehaja.service.roundCell.RoundCellService;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -38,6 +41,7 @@ public class AmenityService {
     private final AdminRepository adminRepository;
     private final RoundService roundService;
     private final RoundCellService roundCellService;
+    private final AmenityRepository amenityRepository;
 
     public boolean addAmenity(AmenityRequestDto amenityRequestDto, String username) {
         Optional<Admin> admin = adminDAO.findAdmin(username);
@@ -55,77 +59,89 @@ public class AmenityService {
 
         int count = 0;
         Optional<Admin> admin = adminRepository.findByAdminId("admin");
+        LocalDate currentDate = LocalDate.now();
 
         for (int i = 0; i < requestDto.getRow().size(); i++) {
 
             Amenity amenity = requestDto.toEntity(i);
             amenity.setAdmin(admin.get());
 
+            if (currentDate.isBefore(amenity.getRcptEndDate().toLocalDate()) && amenity.getSvcStateName() == ServiceState.RESERVE_START) {
 
-            if (amenityDAO.addAmenity(amenity)) {
-                /*
+                Optional<Amenity> amenity2 = amenityRepository.findBySvcId(amenity.getSvcId());
+                if (amenity2.isPresent()) {
+                    amenity = amenity2.get();
+                    roundService.deleteRoundList(amenity.getId());
+                } else {
+                    amenityRepository.save(amenity);
+                }
+
                 Round round1 = new Round();
                 round1.setAmenity(amenity);
                 round1.setRoundName("09:00 ~ 12:00 오전");
-                round1.setRoundUseBeginTime(LocalTime.of(9,0));
-                round1.setRoundUseEndTime(LocalTime.of(12,0));
+                round1.setRoundUseBeginTime(LocalTime.of(9, 0));
+                round1.setRoundUseEndTime(LocalTime.of(12, 0));
 
                 Round round2 = new Round();
                 round2.setAmenity(amenity);
                 round2.setRoundName("12:00 ~ 18:00 오후");
-                round2.setRoundUseBeginTime(LocalTime.of(13,0));
-                round2.setRoundUseEndTime(LocalTime.of(18,0));
+                round2.setRoundUseBeginTime(LocalTime.of(13, 0));
+                round2.setRoundUseEndTime(LocalTime.of(18, 0));
 
-                LocalDate start = amenity.getSvcOpenBeginDate().toLocalDate();
-                LocalDate end = amenity.getSvcOpenEndDate().toLocalDate();
-                LocalDate limit = amenity.getRcptEndDate().toLocalDate();
-                LocalDate current = LocalDate.now();
+                LocalDate end = amenity.getRcptEndDate().toLocalDate();
 
-                if(!current.isAfter(limit)){
-
-                    if (roundService.addRound(amenity.getId(), amenity.getAdmin().getAdminId(), round1)) {
-                        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
-                            RoundCell roundCell = new RoundCell();
-
-                            if(date.isBefore(current)) {
-                                roundCell.setRoundCellState(RoundCellState.RESERVE_END);
-                            }else{
-                                roundCell.setRoundCellState(RoundCellState.RESERVE_START);
-                            }
-                            roundCell.setRoundCellDate(date);
-                            roundCell.setRound(round1);
-                            roundCellService.addRoundCell(roundCell);
-                        }
-                    }
-
-                    if (roundService.addRound(amenity.getId(), amenity.getAdmin().getAdminId(), round2)) {
-                        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
-                            RoundCell roundCell = new RoundCell();
-
-                            if(date.isBefore(current)) {
-                                roundCell.setRoundCellState(RoundCellState.RESERVE_END);
-                            }else{
-                                roundCell.setRoundCellState(RoundCellState.RESERVE_START);
-                            }
-                            roundCell.setRoundCellDate(date);
-                            roundCell.setRound(round1);
-                            roundCellService.addRoundCell(roundCell);
-                        }
-                    }
-
-
-
+                if (end.isAfter(currentDate.plusMonths(1))) {
+                    end = currentDate.plusMonths(1);
+                    end = end.withDayOfMonth(end.lengthOfMonth());
                 }
 
-                */
+                if (roundService.addRound(amenity.getId(), amenity.getAdmin().getAdminId(), round1)) {
+                    for (LocalDate date = currentDate; !date.isAfter(end); date = date.plusDays(1)) {
+                        if (isWeekday(date)) {
+                            RoundCell roundCell = new RoundCell();
+
+                            roundCell.setRoundCellState(RoundCellState.RESERVE_START);
+                            roundCell.setRoundCellDate(date);
+                            roundCell.setRound(round1);
+                            roundCellService.addRoundCell(roundCell);
+                        }
+                    }
+                }
+
+                /*
+                if (roundService.addRound(amenity.getId(), amenity.getAdmin().getAdminId(), round2)) {
+                    for (LocalDate date = currentDate; !date.isAfter(end); date = date.plusDays(1)) {
+                        if (isWeekday(date)) {
+                            RoundCell roundCell = new RoundCell();
+
+                            roundCell.setRoundCellState(RoundCellState.RESERVE_START);
+                            roundCell.setRoundCellDate(date);
+                            roundCell.setRound(round1);
+                            roundCellService.addRoundCell(roundCell);
+                        }
+
+                    }
+                }
+
+                 */
+
 
                 count++;
             }
-
         }
+
 
         return count;
 
+    }
+
+    public boolean isWeekday(LocalDate date) {
+        // LocalDate 객체에서 DayOfWeek 얻기
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        // 요일이 월요일(1)부터 금요일(5)까지인지 확인
+        //return dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY;
+        return dayOfWeek == DayOfWeek.MONDAY || dayOfWeek == DayOfWeek.WEDNESDAY || dayOfWeek == DayOfWeek.FRIDAY;
     }
 
     public AmenityResponseDto selectAmenity(Long id, String username) {
@@ -144,7 +160,7 @@ public class AmenityService {
 
         List<Amenity> amenityList = amenityDAO.selectAmenityList(username);
 
-        for(Amenity amenity : amenityList) {
+        for (Amenity amenity : amenityList) {
             AmenityListResponseDto dto = new AmenityListResponseDto();
             dtoList.add(dto.fromEntity(amenity));
         }
